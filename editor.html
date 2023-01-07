@@ -474,7 +474,7 @@ const url = new URL(url_string);
 const cart = url.searchParams.get("cart");
 if (cart!=undefined) {
   pixel8.input = decodeURIComponent(cart).replaceAll("mod","%");
-  input.value = decodeURIComponent(cart).replaceAll("mod","%");
+  input.innerHTML = decodeURIComponent(cart).replaceAll("mod","%");
 }
 u();
 let t=0;
