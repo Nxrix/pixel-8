@@ -414,7 +414,7 @@ const url_string = window.location.href;
 const url = new URL(url_string);
 const cart = url.searchParams.get("cart");
 if (cart!=undefined) {
-  pixel8.input = decodeURIComponent(cart);
+  pixel8.input = decodeURIComponent(cart).replaceAll("mod","%");
 }
 let t=0;
 const w=pixel8.res;
@@ -424,10 +424,13 @@ function update() {
   cls();
   for (i=0;i<w/2;i++) {
     for (j=0;j<w/2;j++) {
-      x=i,y=j;
-      col=2
+      x=i,y=j;sx=i;sy=j;
+      col=2;
       eval(pixel8.input);
-      rectfill(i*2+1,j*2+1,2,2,pixel8.palette[Math.round(col)%32]);
+      pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
+      sx=Math.round(sx*scale);
+      sy=Math.round(sy*scale);
+      pixel8.ctx.fillRect(sx,sy,scale,scale);
     }
   }
   t++;

@@ -95,7 +95,7 @@ img {
 }
 </style>
 
-<body res="48">
+<body res="256">
   <div id="pixel8_screen">
     <canvas id="pixel8_canvas"></canvas>
     <textarea class="input" oninput="u()">col=(x|y)+t</textarea>
@@ -459,16 +459,21 @@ function copyText(text) {
 }
 function copy() {
   copyText(
-    "https://Nxrix.github.io/Pixel-8/index.html?cart="+encodeURIComponent(pixel8.input)
+    "https://Nxrix.github.io/Pixel-8/?cart="+encodeURIComponent(pixel8.input.replaceAll("%","mod"))
   );
 }
 function u() {
   pixel8.input = document.querySelector(".input").value;
 };
+/*
+col=x^y+t;[sx,sy]=rot(c,c,sx,sy,15);[sy,sz]=rot(c,15.5,sy,col%32,-30);
+*/
 pixel8.input = "col=(x|y)+t";
 u();
 let t=0;
-const w=pixel8.res;
+const scale = 8;
+const w=pixel8.res/scale;
+const c=w/2-.5;
 const n=256/w;
 function update() {
   console.clear();
@@ -476,10 +481,13 @@ function update() {
   cls();
   for (i=0;i<w;i++) {
     for (j=0;j<w;j++) {
-      x=i,y=j;
+      x=i,y=j;sx=i;sy=j;
       col=2;
       eval(pixel8.input);
-      pset(i,j,pixel8.palette[Math.round(col||2)%pixel8.palette.length]);
+      pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
+      sx=Math.round(sx*scale);
+      sy=Math.round(sy*scale);
+      pixel8.ctx.fillRect(sx,sy,scale,scale);
     }
   }
   t++;
