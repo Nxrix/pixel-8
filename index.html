@@ -11,7 +11,7 @@
 
 <script>
 //--Pixel8 Fantasy console--//
-//All Rights Reserved 2023 Nxrix,Vox,Toxel
+//All Rights Reserved 2023 Nxrix,Toxel
 
 const $ = function(id) { return document.getElementById(id); }
 
@@ -413,17 +413,20 @@ pixel8.input = "col=(x/2|y/2)+((x|y)+t)"
 const url_string = window.location.href;
 const url = new URL(url_string);
 const cart = url.searchParams.get("cart");
+if (cart!=undefined) {
+  pixel8.input = decodeURIComponent(cart);
+}
 let t=0;
 const w=pixel8.res;
 const n=256/w*2;
-let col=32;
 function update() {
   requestAnimationFrame(update);
   cls();
   for (i=0;i<w/2;i++) {
     for (j=0;j<w/2;j++) {
       x=i,y=j;
-      eval(cart||pixel8.input);
+      col=2
+      eval(pixel8.input);
       rectfill(i*2+1,j*2+1,2,2,pixel8.palette[Math.round(col)%32]);
     }
   }

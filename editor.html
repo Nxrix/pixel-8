@@ -65,10 +65,32 @@ img {
 #pixel8_canvas {
   width: 85%;
 }
+#copy {
+  background: #334;
+  border: none;
+  border-radius: 2.5vw;
+  position: absolute;
+  width: 15vw;
+  height: 15vw;
+  right: 5vw;
+  bottom: 5vw;
+  transition: all .25s ease;
+}
+#copy:active {
+  background: #223;
+  transform: scale(.75);
+}
 @media (orientation: landscape) {
   #pixel8_canvas {
     height: 100%;
     width: auto;
+  }
+  #copy {
+    border-radius: 2.5vh;
+    width: 15vh;
+    height: 15vh;
+    right: 5vh;
+    bottom: 5vh;
   }
 }
 </style>
@@ -76,10 +98,10 @@ img {
 <body res="48">
   <div id="pixel8_screen">
     <canvas id="pixel8_canvas"></canvas>
-    <textarea class="input" oninput="u()">col=x|y</textarea>
+    <textarea class="input" oninput="u()">col=(x|y)+t</textarea>
+    <button onclick="copy()" id="copy">C</button>
   </div>
 </body>
-
 <script>
 //Pixel8 Fantasy console
 //All Rights Reserved 2023 Nxrix,Toxel
@@ -427,9 +449,23 @@ const trifill = (x,y,x1,y1,x2,y2,c) => {
 //pixel8.ctx.filter = `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><filter id="f" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"/></feComponentTransfer></filter></svg>#f')`;
 </script>
 <script>
+function copyText(text) {
+  textarea = document.createElement("textarea");
+  document.body.appendChild(textarea)
+  textarea.value = text;
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
+}
+function copy() {
+  copyText(
+    "https://Nxrix.github.io/Pixel-8/index.html?cart="+encodeURIComponent(pixel8.input)
+  );
+}
 function u() {
   pixel8.input = document.querySelector(".input").value;
 };
+pixel8.input = "col=(x|y)+t";
 u();
 let t=0;
 const w=pixel8.res;
