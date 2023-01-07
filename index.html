@@ -7,7 +7,7 @@
   <title>pixel8</title>
 </head>
 
-<body res="96"></body>
+<body res="256"></body>
 
 <script>
 //--Pixel8 Fantasy console--//
@@ -417,13 +417,15 @@ if (cart!=undefined) {
   pixel8.input = decodeURIComponent(cart).replaceAll("mod","%");
 }
 let t=0;
-const w=pixel8.res;
+const scale = 8;
+const w=pixel8.res/scale;
+const c=w/2-.5;
 const n=256/w*2;
 function update() {
   requestAnimationFrame(update);
   cls();
-  for (i=0;i<w/2;i++) {
-    for (j=0;j<w/2;j++) {
+  for (i=0;i<w;i++) {
+    for (j=0;j<w;j++) {
       x=i,y=j;sx=i;sy=j;
       col=2;
       eval(pixel8.input);
