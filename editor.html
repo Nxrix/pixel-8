@@ -469,6 +469,13 @@ function u() {
 col=x^y+t;[sx,sy]=rot(c,c,sx,sy,15);[sy,sz]=rot(c,15.5,sy,col%32,-30);
 */
 pixel8.input = "col=(x|y)+t";
+const url_string = window.location.href;
+const url = new URL(url_string);
+const cart = url.searchParams.get("cart");
+if (cart!=undefined) {
+  pixel8.input = decodeURIComponent(cart).replaceAll("mod","%");
+  input.value = decodeURIComponent(cart).replaceAll("mod","%");
+}
 u();
 let t=0;
 const scale = 8;
