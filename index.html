@@ -426,14 +426,21 @@ function update() {
   cls();
   for (i=0;i<w;i++) {
     for (j=0;j<w;j++) {
-      x=i,y=j;sx=i;sy=j;
+      x=i,y=j;sx=i;sy=j;sz=0;
       col=2;
       eval(pixel8.input);
-      pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
-      sx=Math.round(sx*scale);
-      sy=Math.round(sy*scale);
-      pixel8.ctx.fillRect(sx,sy,scale,scale);
+      vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
     }
+  }
+  vec.sort((v1,v2) => {
+    return v2.z - v1.z;
+  });
+  for (i in vec) {
+    [sx,sy,sz,col]=[vec[i].x,vec[i].y,vec[i].z,vec[i].c];
+    pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
+    sx=Math.round(sx*scale);
+    sy=Math.round(sy*scale);
+    pixel8.ctx.fillRect(sx,sy,scale,scale);
   }
   t++;
 }

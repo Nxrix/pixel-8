@@ -468,6 +468,9 @@ function u() {
 /*
 col=x^y+t;[sx,sy]=rot(c,c,sx,sy,15);[sy,sz]=rot(c,15.5,sy,col%32,-30);
 */
+/*
+s=(z)=>{return sin(z/4+t/8)*8+8};col=x^y;[sx,sy]=rot(c,c,sx,sy,t);[sy,sz]=rot(c,15.5,sy,col%w,t);sz+=w;sx=(sx-c)*w/sz+c;sy=(sy-c)*w/sz+c;
+*/
 pixel8.input = "col=(x|y)+t";
 const url_string = window.location.href;
 const url = new URL(url_string);
@@ -479,22 +482,33 @@ if (cart!=undefined) {
 u();
 let t=0;
 const scale = 8;
+let sr=0;
 const w=pixel8.res/scale;
 const c=w/2-.5;
 const n=256/w;
+let vec=[];
 function update() {
   console.clear();
   requestAnimationFrame(update);
   cls();
   for (i=0;i<w;i++) {
     for (j=0;j<w;j++) {
-      x=i,y=j;sx=i;sy=j;
+      x=i,y=j;sx=i;sy=j;sz=1;
       col=2;
       eval(pixel8.input);
-      pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
-      sx=Math.round(sx*scale);
-      sy=Math.round(sy*scale);
-      pixel8.ctx.fillRect(sx,sy,scale,scale);
+      vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
+    }
+  }
+  vec.sort((v1,v2) => {
+    return v2.z - v1.z;
+  });
+  for (i in vec) {
+    [sx,sy,sz,col]=[vec[i].x,vec[i].y,vec[i].z,vec[i].c];
+    pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
+    sx=Math.round(sx*scale);
+    sy=Math.round(sy*scale);
+    if (sz>0) {
+      pixel8.ctx.fillRect(sx,sy,scale+sr,scale+sr);
     }
   }
   t++;
