@@ -418,15 +418,18 @@ if (cart!=undefined) {
 }
 let t=0;
 const scale = 8;
+let sr=0;
 const w=pixel8.res/scale;
 const c=w/2-.5;
-const n=256/w*2;
+const n=256/w;
+let vec=[];
 function update() {
+  console.clear();
   requestAnimationFrame(update);
   cls();
   for (i=0;i<w;i++) {
     for (j=0;j<w;j++) {
-      x=i,y=j;sx=i;sy=j;sz=0;
+      x=i,y=j;sx=i;sy=j;sz=1;
       col=2;
       eval(pixel8.input);
       vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
@@ -440,7 +443,9 @@ function update() {
     pixel8.ctx.fillStyle = pixel8.palette[Math.round(col||2)%pixel8.palette.length];
     sx=Math.round(sx*scale);
     sy=Math.round(sy*scale);
-    pixel8.ctx.fillRect(sx,sy,scale,scale);
+    if (sz>0) {
+      pixel8.ctx.fillRect(sx,sy,scale+sr,scale+sr);
+    }
   }
   t++;
 }
