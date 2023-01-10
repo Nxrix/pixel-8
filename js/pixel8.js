@@ -42,6 +42,7 @@ img {
 }
 #pixel8_canvas {
   width: 85%;
+  touch-action: none;
 }
 @media (orientation: landscape) {
   #pixel8_canvas {
