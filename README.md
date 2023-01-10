@@ -12,6 +12,8 @@ tiny Fantasy Console and JavaScript library for making tiny games or art
 | Code           | JavaScript |
 | Sprite         | just in JS library |
 
+[Try live editor now](https://nxrix.github.io/Pixel-8/editor.html)
+
 # Api
 
 ### Options
