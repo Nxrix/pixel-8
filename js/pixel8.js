@@ -9,49 +9,54 @@ const pixel8 = [];
 pixel8.style = `
 @font-face {
   font-family: pixel8;
-  src: url('font/pixel8.woff');
+  src: url('pixel8.woff');
 }
 * {
   margin: 0;
   padding: 0;
   color: white;
-  background: rgba(25,26,48,0);
   font-smooth: never;
+  font-family: pixel8;
   color: #fff;
+  font-size: calc(100vw/8);
 }
 html {
   height: -webkit-fill-available;
+  height: 100%;
 }
 body {
   height: calc(100%);
   min-height: 100%;
   min-height: -webkit-fill-available;
   width: 100%;
-  background: rgb(25,26,48);
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 img {
   display: none;
 }
 #pixel8_screen {
-  image-rendering: pixelated;
   width: 100vw;
-  height: calc(100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
 }
 #pixel8_canvas {
-  width: 85%;
+  width: 100%;
+  image-rendering: pixelated;
   touch-action: none;
 }
 @media (orientation: landscape) {
+  * {
+    font-size: calc(100vh/8);
+  }
   #pixel8_canvas {
     height: 100%;
     width: auto;
   }
 }`;
 if (document.body.getAttribute("init")=="f") {
-  pixel8.screen = $("pixel8_screen");
+  //pixel8.screen = $("pixel8_screen");
   pixel8.canvas = $("pixel8_canvas");
 }
 else {
@@ -59,13 +64,13 @@ else {
   pixel8.styleSheet.innerText = pixel8.style;
   document.head.appendChild(pixel8.styleSheet);
   //--main div--//
-  pixel8.screen = document.createElement("div");
+  /*pixel8.screen = document.createElement("div");
   pixel8.screen.id = "pixel8_screen";
-  document.body.appendChild(pixel8.screen);
+  document.body.appendChild(pixel8.screen);*/
   //--canvas--//
   pixel8.canvas = document.createElement("canvas");
   pixel8.canvas.id = "pixel8_canvas";
-  $("pixel8_screen").appendChild(pixel8.canvas);
+  document.body.appendChild(pixel8.canvas);
 }
 pixel8.ctx = pixel8.canvas.getContext("2d");
 pixel8.res = document.body.getAttribute("res")||128;
@@ -274,8 +279,8 @@ pixel8.src = pixel8.scripts[pixel8.scripts.length-1].src;
 pixel8.rgbPalette.src = pixel8.src.split("pixel8.js")[0]+"i128.png";
 
 const pixs = (x,y,r,g,b,s,w) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy);
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
   r = Math.max(Math.min(r,255),0);
   g = Math.max(Math.min(g,255),0);
   b = Math.max(Math.min(b,255),0);
@@ -285,8 +290,8 @@ const pixs = (x,y,r,g,b,s,w) => {
 }
 
 const pset = (x,y,c) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy);
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
   pixel8.ctx.beginPath();
   pixel8.ctx.fillStyle = c;
   pixel8.ctx.fillRect(x,y,1,1);
@@ -301,8 +306,8 @@ const pget = (x,y) => {
 }
 
 const spr = (i,j,x,y,z) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy)
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy)
   pixel8.ctx.imageSmoothingEnabled = false;
   pixel8.ctx.drawImage(pixel8.sprite,i*z,j*z,z,z,x,y,z,z);
 }
@@ -318,8 +323,8 @@ const sspr = (x,y,w,h,x1,y1,w1,h1,r) => {
 }
 
 const circ = (x,y,s,c,w) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy);
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
   s = Math.round(s);
   pixel8.ctx.beginPath();
   pixel8.ctx.arc(x,y,s,0,2*Math.PI);
@@ -329,8 +334,8 @@ const circ = (x,y,s,c,w) => {
 }
 
 const circfill = (x,y,s,c) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy);
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
   s = Math.round(s);
   pixel8.ctx.beginPath();
   pixel8.ctx.arc(x,y,s,0,2*Math.PI);
@@ -339,10 +344,10 @@ const circfill = (x,y,s,c) => {
 }
 
 const line = (x,y,x1,y1,c,w) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy);
-  x1 = Math.round(x1+pixel8.camx);
-  y1 = Math.round(y1+pixel8.camy);
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
+  x1 = Math.round(x1-pixel8.camx);
+  y1 = Math.round(y1-pixel8.camy);
   pixel8.ctx.beginPath();
   pixel8.ctx.moveTo(x,y);
   pixel8.ctx.strokeStyle = c;
@@ -351,8 +356,8 @@ const line = (x,y,x1,y1,c,w) => {
 }
 
 const rectfill = (x,y,sx,sy,c) => {
-  x = Math.round(x)-sx/2;
-  y = Math.round(y)-sy/2;
+  x = Math.round(x-pixel8.camx)-sx/2;
+  y = Math.round(y-pixel8.camy)-sy/2;
   sx = Math.round(sx);
   sy = Math.round(sy);
   pixel8.ctx.beginPath();
@@ -361,13 +366,12 @@ const rectfill = (x,y,sx,sy,c) => {
   pixel8.ctx.fill();
 }
 
-const rect = (x,y,sx,sy,c) => {
-  x = Math.round(x)-sx/2;
-  y = Math.round(y)-sy/2;
-  sx = (sx);
-  sy = (sy);
+const rect = (x,y,sx,sy,c,w) => {
+  x = Math.round(x-pixel8.camx)-sx/2;
+  y = Math.round(y-pixel8.camy)-sy/2;
   pixel8.ctx.beginPath();
   pixel8.ctx.strokeStyle = c;
+  pixel8.ctx.lineWidth = w || 1;
   pixel8.ctx.strokeRect(x,y,sx,sy);
   pixel8.ctx.stroke();
 }
@@ -389,12 +393,12 @@ const rectrot = (x,y,sx,sy,c,r) => {
 }
 
 const trifill = (x,y,x1,y1,x2,y2,c) => {
-  x = Math.round(x+pixel8.camx);
-  y = Math.round(y+pixel8.camy);
-  x1 = Math.round(x1+pixel8.camx);
-  y1 = Math.round(y1+pixel8.camy);
-  x2 = Math.round(x2+pixel8.camx);
-  y2 = Math.round(y2+pixel8.camy);
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
+  x1 = Math.round(x1-pixel8.camx);
+  y1 = Math.round(y1-pixel8.camy);
+  x2 = Math.round(x2-pixel8.camx);
+  y2 = Math.round(y2-pixel8.camy);
   pixel8.ctx.beginPath();
   pixel8.ctx.fillStyle = c;
   pixel8.ctx.moveTo(x,y);
@@ -440,6 +444,7 @@ const saveImage = (img,name) => {
 }
 
 //--Mouse & Touch--//
+window.addEventListener("resize",function(){pixel8.boundbox = pixel8.canvas.getBoundingClientRect();});
 pixel8.canvas.addEventListener("touchstart", touch);
 pixel8.canvas.addEventListener("touchmove",touch);
 pixel8.canvas.addEventListener("touchend",mouseUp);
@@ -448,9 +453,6 @@ pixel8.canvas.addEventListener("mousemove", mouseMove);
 pixel8.canvas.addEventListener("mouseup", mouseUp);
 pixel8.boundbox = pixel8.canvas.getBoundingClientRect();
 pixel8.mouse=[];
-/*pixel8.mouse.x=0;
-pixel8.mouse.y=0;
-pixel8.mouse.start=false;*/
 function touch() {
   pixel8.mouse.x = (event.touches[0].clientX-pixel8.boundbox.left)/pixel8.boundbox.width*pixel8.canvas.width;
   pixel8.mouse.y = (event.touches[0].clientY-pixel8.boundbox.top)/pixel8.boundbox.height*pixel8.canvas.height;
