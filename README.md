@@ -18,11 +18,11 @@ tiny Fantasy Console and JavaScript library for making tiny games or art
 
 ### Options
 * Resolution
-  * <body res="n">
+  * `<body res="n">`
 * disable canvas and styles
-  * <body init="f">
+  * `<body init="f">`
 * Adding sprite
-  * <img id="sprite">
+  * `<img id="sprite">`
 
 ### Colors
 * RGB to color
