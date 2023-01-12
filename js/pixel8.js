@@ -37,9 +37,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-img {
-  display: none;
-}
 #pixel8_screen {
   width: 100vw;
   height: 100%;
@@ -158,7 +155,7 @@ for (let x = 0; x < 8; x++) {
 
 if ($("sprite")!=undefined) {
   pixel8.sprite = $("sprite");
-  pixel8.sprite.style.display = 'none';
+  pixel8.sprite.style.display = "none";
 }
 
 
@@ -448,12 +445,12 @@ const saveImage = (img,name) => {
 
 //--Mouse & Touch--//
 window.addEventListener("resize",function(){pixel8.boundbox = pixel8.canvas.getBoundingClientRect();});
-pixel8.canvas.addEventListener("touchstart", touch);
-pixel8.canvas.addEventListener("touchmove",touch);
-pixel8.canvas.addEventListener("touchend",mouseUp);
-pixel8.canvas.addEventListener("mousedown", mouseDown);
-pixel8.canvas.addEventListener("mousemove", mouseMove);
-pixel8.canvas.addEventListener("mouseup", mouseUp);
+window.addEventListener("touchstart", touch);
+window.addEventListener("touchmove",touch);
+window.addEventListener("touchend",mouseUp);
+window.addEventListener("mousedown", mouseDown);
+window.addEventListener("mousemove", mouseMove);
+window.addEventListener("mouseup", mouseUp);
 pixel8.boundbox = pixel8.canvas.getBoundingClientRect();
 pixel8.mouse=[];
 function touch() {
