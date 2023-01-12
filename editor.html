@@ -51,7 +51,7 @@
 <body res="128">
   <img src="img/sprite.png" id="sprite">
   <textarea id="input">col=(x|y);</textarea>
-  <img class="play" src="img/play.png" onclick="init();">
+  <img class="play" src="img/play.png">
 </body>
 <script src="js/pixel8.js"></script>
 <script>
@@ -61,7 +61,7 @@ col=x^y+t;[sx,sy]=rot(c,c,sx,sy,15);[sy,sz]=rot(c,15.5,sy,col%32,-30);
 /*
 s=(z)=>{return sin(z/4+t/8)*8+8};col=x^y;[sx,sy]=rot(c,c,sx,sy,t);[sy,sz]=rot(c,15.5,sy,col%w,t);sz+=w;sx=(sx-c)*w/sz+c;sy=(sy-c)*w/sz+c;
 */
-function init() {
+document.querySelector(".play").onclick=function () {
   document.querySelector(".play").style.display="none";
   pixel8.canvas.style.background = pixel8.palette[0];
   pixel8.sctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -154,7 +154,7 @@ function update() {
     if (t%6==0&&t<60) {
       pixel8.note(note[(t/6)%5]*256,"square",.5);
     } 
-    if (t>64) page=0,pixel8.ctx.shadowColor="#0000",pixel8.ctx.shadowOffsetX=0,pixel8.ctx.shadowOffsetY=0,pixel8.canvas.style.background = pixel8.palette[3];
+    if (t>64) page=2,pixel8.ctx.shadowColor="#0000",pixel8.ctx.shadowOffsetX=0,pixel8.ctx.shadowOffsetY=0,pixel8.canvas.style.background = pixel8.palette[3];
     else {
       pixel8.ctx.shadowColor=pixel8.palette[1];
       pixel8.ctx.shadowOffsetX=-2;
