@@ -51,7 +51,7 @@
 <body res="128">
   <img src="img/sprite.png" id="sprite">
   <textarea id="input">col=(x|y);</textarea>
-  <img class="play" src="img/play.png" onclick="update();document.querySelector('.play').style.display='none';pixel8.canvas.style.background = pixel8.palette[0];">
+  <img class="play" src="img/play.png" onclick="init();">
 </body>
 <script src="js/pixel8.js"></script>
 <script>
@@ -61,6 +61,12 @@ col=x^y+t;[sx,sy]=rot(c,c,sx,sy,15);[sy,sz]=rot(c,15.5,sy,col%32,-30);
 /*
 s=(z)=>{return sin(z/4+t/8)*8+8};col=x^y;[sx,sy]=rot(c,c,sx,sy,t);[sy,sz]=rot(c,15.5,sy,col%w,t);sz+=w;sx=(sx-c)*w/sz+c;sy=(sy-c)*w/sz+c;
 */
+function init() {
+  document.querySelector(".play").style.display="none";
+  pixel8.canvas.style.background = pixel8.palette[0];
+  pixel8.sctx = new (window.AudioContext || window.webkitAudioContext)();
+  update();
+}
 let t=0;
 let page=-1;
 pixel8.cursor = 0;
@@ -69,8 +75,6 @@ const w=pixel8.res/scale;
 const c=w/2-.5;
 const n=256/w;
 let vec=[];
-
-pixel8.sctx = new (window.AudioContext || window.webkitAudioContext)();
 
 pixel8.note = (frequency,type,time) => {
   var o = pixel8.sctx.createOscillator();
