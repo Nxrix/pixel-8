@@ -10,173 +10,207 @@
 </head>
 
 <style>
-@font-face {
-  font-family: pixel8;
-  src: url("font/pixel8.woff");
+#pixel8_canvas {
+  cursor: none;
 }
-@font-face {
-  font-family: font;
-  src: url("telefon.otf");
-}
-* {
-  margin: 0;
-  padding: 0;
-  color: #fff;
-  font-size: 110%;
-  font-family: font;
-  background: rgba(25,26,48,0);
-  font-smooth: never;
-  color: #fff;
-}
-html {
-  height: -webkit-fill-available;
-  overflow: hidden;
-}
-body {
-  height: calc(100%);
-  min-height: 100%;
-  min-height: -webkit-fill-available;
-  width: 100%;
-  background: rgb(25,26,48);
-  overflow: hidden;
-}
-img {
-  display: none;
-}
-.input {
-  position: absolute;
-  border: none;
-  background: #0002;
+#input {
+  background: #0000;
+  position: fixed;
+  z-index: 1;
   resize: none;
+  border: none;
+  line-height: calc((100vw/128) * 8);
+  overflow-y: scroll;
 }
-.input:focus {
+#input:focus {
   outline: none;
 }
-#pixel8_screen {
-  image-rendering: pixelated;
-  width: 100vw;
-  height: calc(100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.input {
-  width: 80vw;
-  height: 80%;
-  padding: 5% 10%;
-}
-#pixel8_canvas {
-  width: 85%;
-}
-#copy {
-  background: #334;
-  border: none;
-  border-radius: 2.5vw;
-  position: absolute;
-  width: 15vw;
-  height: 15vw;
-  right: 5vw;
-  bottom: 5vw;
-  transition: all .25s ease;
-}
-#copy:active {
-  background: #223;
-  transform: scale(.75);
+@media (orientation: portrait) {
+  #input {
+    width: calc((100vw/128) * 122);
+    height: calc((100vw/128) * 112);
+    margin-top: calc((100vw/128) * 10);
+  }
 }
 @media (orientation: landscape) {
-  #pixel8_canvas {
-    height: 100%;
-    width: auto;
-  }
-  #copy {
-    border-radius: 2.5vh;
-    width: 15vh;
-    height: 15vh;
-    right: 5vh;
-    bottom: 5vh;
+  #input {
+    width: calc((100vmin/128) * 122);
+    height: calc((100%/128) * 112);
+    margin-top: calc((100vmin/128) * 10);
   }
 }
 </style>
 
-<body res="128" init="f">
-  <div id="pixel8_screen">
-    <canvas id="pixel8_canvas"></canvas>
-    <textarea class="input" oninput="u()">col=(t+x|t+y)-t</textarea>
-    <button onclick="copy()" id="copy">C</button>
-  </div>
+<body res="128">
+  <img src="img/sprite.png" id="sprite">
+  <textarea id="input">col=(x|y);</textarea>
 </body>
 <script src="js/pixel8.js"></script>
 <script>
-function copy() {
-  copyText(
-    "https://Nxrix.github.io/Pixel-8/?cart="+encodeURIComponent(pixel8.input.replaceAll("%","mod"))
-  );
-}
-document.body.addEventListener("keydown",function(e) {
-  key=e.keyCode;
-  console.log(((96 <= key && key <= 105) ? key-48 : key));
-});
-function u() {
-  pixel8.input = document.querySelector(".input").value;
-};
 /*
 col=x^y+t;[sx,sy]=rot(c,c,sx,sy,15);[sy,sz]=rot(c,15.5,sy,col%32,-30);
 */
 /*
 s=(z)=>{return sin(z/4+t/8)*8+8};col=x^y;[sx,sy]=rot(c,c,sx,sy,t);[sy,sz]=rot(c,15.5,sy,col%w,t);sz+=w;sx=(sx-c)*w/sz+c;sy=(sy-c)*w/sz+c;
 */
-pixel8.input = "col=(x|y)+t;";
-const url_string = window.location.href;
-const url = new URL(url_string);
-const cart = url.searchParams.get("cart");
-if (cart!=undefined) {
-  document.querySelector(".input").value= decodeURIComponent(cart).replaceAll("mod","%");
-  pixel8.input = decodeURIComponent(cart).replaceAll("mod","%");
-}
-u();
 let t=0;
+let page=-1;
+pixel8.cursor = 0;
 const scale = 4;
-let sr=0;
 const w=pixel8.res/scale;
 const c=w/2-.5;
 const n=256/w;
 let vec=[];
-function update() {
-  console.clear();
-  requestAnimationFrame(update);
-  cls();
-  i=0;
-  while (i<w) {
-    j=0;
-    while (j<w) {
-      x=i,y=j;sx=i;sy=j;sz=1;
-      col=2;
-      eval(pixel8.input);
-      vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
-      j++;
-    }
-    i++;
+
+pixel8.sctx = new (window.AudioContext || window.webkitAudioContext)();
+
+pixel8.note = (frequency,type,time) => {
+  var o = pixel8.sctx.createOscillator();
+  var g = pixel8.sctx.createGain();
+  o.type = type;
+  o.frequency.value = frequency;
+  g.connect(pixel8.sctx.destination);
+  o.connect(g);
+  g.gain.exponentialRampToValueAtTime(0.0001,pixel8.sctx.currentTime + time);
+  o.start(pixel8.sctx.currentTime);
+  o.stop(pixel8.sctx.currentTime + time);
+}
+
+function copy() {
+  copyText(
+    "https://Nxrix.github.io/Pixel-8/?cart="+encodeURIComponent(pixel8.input.replaceAll("%","mod"))
+  );
+}
+input.addEventListener("input", function(e) {
+  pixel8.input = input.value;
+});
+
+let [camxo,camyo]=[0,0];
+function cam(x,y) {
+  camxo=x;
+  camyo=y;
+} 
+
+function btn(x,y,i,j,d,s) {
+  var dist=Math.hypot(x-stat(6)-pixel8.camx+s/2,y-stat(7)-pixel8.camy+s/2);
+  var z=0;
+  if (dist<d&&stat(8)) {
+    pixel8.cursor = 2;
+    var z=1;
   }
-  vec.sort((v1,v2) => {
-    return v2.z - v1.z;
-  });
-  l=vec.length;
-  i=0;
-  while(i<l) {
-    [sx,sy,sz,col]=[vec[i].x,vec[i].y,vec[i].z,vec[i].c];
-    if (sz>0) {
-      sx=Math.round(sx*scale);
-      sy=Math.round(sy*scale);
-      if (isNaN(col)) {
-        col1=eval("pixel8.xyzn"+col);
-        pixs(sx,sy,col1.x,col1.y,col1.z,.125,scale);
-      }
-      else {
-        pixel8.ctx.fillStyle = (pixel8.palette[Math.round(col||2)%pixel8.palette.length]);
-        pixel8.ctx.fillRect(sx,sy,scale+sr,scale+sr);
+  else if (dist<d) {
+    pixel8.cursor = 1;
+  }
+  else {
+    var z=0;
+  };
+  spr(i,j+1,x,y+1,s);
+  spr(i,j,x,y+z,s);
+  return z;
+}
+
+pixel8.input = input.value;
+const url_string = window.location.href;
+const url = new URL(url_string);
+const cart = url.searchParams.get("cart");
+if (cart!=undefined) {
+  cartD = decodeURIComponent(cart).replaceAll("mod","%");
+  input.value = cartD;
+  pixel8.input = cartD;
+}
+
+pixel8.canvas.onclick=function(){
+  if (page==0) {
+    input.style.display="block";
+  }
+  else {
+    input.style.display="none";
+  }
+}
+
+pixel8.canvas.style.background = pixel8.palette[0];
+function update() {
+  //console.clear();
+  pixel8.ctx.clearRect(0,0,pixel8.canvas.width,pixel8.canvas.height);
+  requestAnimationFrame(update);
+  if (page==-1) {
+    input.style.display="none";
+    var sn=sin(t/16);
+    sspr(64-16*sn,64-20,32*sn,32,0,0,7,7);
+    pixel8.ctx.fillStyle = pixel8.palette[2];
+    pixel8.ctx.fillText("Pixel-8",52,86);
+    var note = [1,2,4,3,5];
+    if (t%12==0&&t<60) {
+      pixel8.note(note[(t/12)%5]*256,"square",.5);
+    } 
+    if (t>64) page=0,pixel8.ctx.shadowColor="#0000",pixel8.ctx.shadowOffsetX=0,pixel8.ctx.shadowOffsetY=0,pixel8.canvas.style.background = pixel8.palette[3];
+    else {
+      pixel8.ctx.shadowColor=pixel8.palette[1];
+      pixel8.ctx.shadowOffsetX=-2;
+      pixel8.ctx.shadowOffsetY=2;
+    }
+  }
+  else if (page==0) {
+    input.style.display="block";
+    rect(64,69,125,115,pixel8.palette[2]);
+    for (i=0;i<w;i++) {
+      for (j=0;j<w;j++) {
+        x=i,y=j;sx=i;sy=j;
+        col=2;
+        eval(pixel8.input);
+        pset(x+96,y+96,pixel8.palette[Math.round(col)%32])
       }
     }
-    i++;
+  }
+
+  //run cart
+  else if (page==1) {
+    input.style.display="none";
+    //viewer
+    sz=1;
+    for (i=0;i<w;i++) {
+      for (j=0;j<w;j++) {
+        x=i,y=j;sx=i;sy=j;
+        col=2;
+        eval(pixel8.input);
+        vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
+      }
+    }
+    vec.sort((v1,v2) => {
+      return v2.z - v1.z;
+    });
+    for (i in vec) {
+      [sx,sy,sz,col]=[vec[i].x,vec[i].y,vec[i].z,vec[i].c];
+      if (sz>0) {
+        sx=sx*scale+128+scale/2;
+        sy=sy*scale+scale/2;
+        rectfill(sx,sy,scale,scale,pixel8.palette[Math.round(col||2)%32]);
+      }
+    }
+    if (btn(130,62,4,0,4,7)) cam(0,0),page=0;
+  }
+  else if (page==2) {
+    input.style.display="none";
+    pixel8.ctx.fillStyle = pixel8.palette[2];
+    var str = "Welcome to Pixel-8 0.1\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
+    for (i in str) {
+      pixel8.ctx.fillText(str[i],1,15+i*5);
+    }
+  }
+
+  //camera
+  pixel8.camx=pixel8.camx-(pixel8.camx-camxo)*.5;
+  pixel8.camy=pixel8.camy-(pixel8.camy-camyo)*.5;
+
+  //ui
+  if (page!=1&&page!=-1) {
+    pixel8.cursor = 0;
+    rectfill(64+pixel8.camx,5+pixel8.camy,128,10,"rgb(49,51,113)");
+    btn(1+pixel8.camx,1+pixel8.camy,0,0,4,7);
+    if (btn(120+pixel8.camx,1+pixel8.camy,3,0,4,7)) cam(128,0), page=1;
+    if (btn(110+pixel8.camx,1+pixel8.camy,2,0,4,7)) cam(0,128),page=2;
+    if (btn(100+pixel8.camx,1+pixel8.camy,1,0,4,7)) cam(0,0),page=0;
+    spr(pixel8.cursor,1.5625,pixel8.mouse.x+pixel8.camx,pixel8.mouse.y+pixel8.camy,9);
   }
   t++;
 }
