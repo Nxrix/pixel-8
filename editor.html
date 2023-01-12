@@ -187,7 +187,8 @@ function update() {
         rectfill(sx,sy,scale,scale,pixel8.palette[Math.round(col||2)%32]);
       }
     }
-    if (btn(130,62,4,0,4,7)) cam(0,0),page=0;
+    if (btn(130,61,4,0,4,7)) cam(0,0),page=0;
+    if (btn(246,61,8,0,4,7)) copy();
   }
   else if (page==2) {
     input.style.display="none";
