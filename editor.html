@@ -10,17 +10,24 @@
 </head>
 
 <style>
+.play {
+  position: fixed;
+  width: 100vmin;
+  height: 100vmin;
+  z-index: 2;
+  image-rendering: pixelated;
+}
 #pixel8_canvas {
   cursor: none;
 }
 #input {
   background: #0000;
   position: fixed;
-  z-index: 1;
   resize: none;
   border: none;
   line-height: calc((100vw/128) * 8);
   overflow-y: scroll;
+  display: none;
 }
 #input:focus {
   outline: none;
@@ -44,6 +51,7 @@
 <body res="128">
   <img src="img/sprite.png" id="sprite">
   <textarea id="input">col=(x|y);</textarea>
+  <img class="play" src="img/play.png" onclick="update();document.querySelector('.play').style.display='none';pixel8.canvas.style.background = pixel8.palette[0];">
 </body>
 <script src="js/pixel8.js"></script>
 <script>
@@ -127,21 +135,20 @@ pixel8.canvas.onclick=function(){
     input.style.display="none";
   }
 }
-
-pixel8.canvas.style.background = pixel8.palette[0];
 function update() {
   console.clear();
   pixel8.ctx.clearRect(0,0,pixel8.canvas.width,pixel8.canvas.height);
   requestAnimationFrame(update);
+  pixel8.cursor = 0;
   if (page==-1) {
     input.style.display="none";
     var sn=sin(t/16);
     sspr(64-16*sn,64-20,32*sn,32,0,0,7,7);
     pixel8.ctx.fillStyle = pixel8.palette[2];
     pixel8.ctx.fillText("Pixel-8",52,86);
-    var note = [1,2,4,3,5];
-    if (t%12==0&&t<60) {
-      pixel8.note(note[(t/12)%5]*256,"square",.5);
+    var note = [1,3,4,2,5];
+    if (t%6==0&&t<60) {
+      pixel8.note(note[(t/6)%5]*256,"square",.5);
     } 
     if (t>64) page=0,pixel8.ctx.shadowColor="#0000",pixel8.ctx.shadowOffsetX=0,pixel8.ctx.shadowOffsetY=0,pixel8.canvas.style.background = pixel8.palette[3];
     else {
@@ -193,7 +200,7 @@ function update() {
   else if (page==2) {
     input.style.display="none";
     pixel8.ctx.fillStyle = pixel8.palette[2];
-    var str = "Welcome to Pixel-8 0.1\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
+    var str = "Welcome to Pixel-8 0.2\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
     for (i in str) {
       pixel8.ctx.fillText(str[i],1,15+i*5);
     }
@@ -205,7 +212,6 @@ function update() {
 
   //ui
   if (page!=1&&page!=-1) {
-    pixel8.cursor = 0;
     rectfill(64+pixel8.camx,5+pixel8.camy,128,10,"rgb(49,51,113)");
     btn(1+pixel8.camx,1+pixel8.camy,0,0,4,7);
     if (btn(120+pixel8.camx,1+pixel8.camy,3,0,4,7)) cam(128,0), page=1;
@@ -215,7 +221,6 @@ function update() {
   spr(pixel8.cursor,1.5625,pixel8.mouse.x+pixel8.camx,pixel8.mouse.y+pixel8.camy,9);
   t++;
 }
-update();
 </script>
 
 </html>
