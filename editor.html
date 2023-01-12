@@ -211,8 +211,8 @@ function update() {
     if (btn(120+pixel8.camx,1+pixel8.camy,3,0,4,7)) cam(128,0), page=1;
     if (btn(110+pixel8.camx,1+pixel8.camy,2,0,4,7)) cam(0,128),page=2;
     if (btn(100+pixel8.camx,1+pixel8.camy,1,0,4,7)) cam(0,0),page=0;
-    spr(pixel8.cursor,1.5625,pixel8.mouse.x+pixel8.camx,pixel8.mouse.y+pixel8.camy,9);
   }
+  spr(pixel8.cursor,1.5625,pixel8.mouse.x+pixel8.camx,pixel8.mouse.y+pixel8.camy,9);
   t++;
 }
 update();
