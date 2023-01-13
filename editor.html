@@ -172,7 +172,7 @@ pixel8.canvas.onclick=function(){
   }
 }
 function update() {
-  //console.clear();
+  console.clear();
   requestAnimationFrame(update);
   pixel8.ctx.clearRect(0,0,pixel8.canvas.width,pixel8.canvas.height);
   pixel8.cursor = 0;
@@ -247,7 +247,7 @@ function update() {
         }
       }
       if (btn(130,61,4,0,4,7)) cam(0,0),pixel8.page=0;
-      if (btn(246,61,8,0,4,7)) copyText(url.origin+"/?cart="+pixel8.encode(pixel8.input));
+      if (btn(246,61,8,0,4,7)) copyText("https://Nxrix.github.io/Pixel-8/?cart="+pixel8.encode(pixel8.input));
       break;
   }
   //--camera--//
