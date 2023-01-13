@@ -9,19 +9,19 @@
   <title>pixel8</title>
 </head>
 
-<body res="256"></body>
+<body res="128"></body>
 
 <script src="js/pixel8.js"></script>
 <script>
-pixel8.input = "col=(x/2|y/2)+((x|y)+t)"
+pixel8.input = "col=(x|y)"
 const url_string = window.location.href;
 const url = new URL(url_string);
-const cart = url.searchParams.get("cart");
-if (cart!=undefined) {
-  pixel8.input = decodeURIComponent(cart).replaceAll("mod","%");
+const cart = url.hash.substring(1);
+if (cart!=undefined&&cart!="") {
+  pixel8.input = cart;
 }
 let t=0;
-const scale = 8;
+const scale = 4;
 let sr=0;
 const w=pixel8.res/scale;
 const c=w/2-.5;
