@@ -144,13 +144,13 @@ pixel8.encode = (x) => {
   var y="";
   x=x.split("");
   var l=Math.round(x.length/2);
-  for (i=0;i<l;i++) y+=String.fromCharCode((x[i*2].charCodeAt(0)+(x[i*2+1]||String.fromCharCode(0)).charCodeAt(0)*256)+65536);
+  for (i=0;i<l;i++) y+=String.fromCharCode((x[i*2].charCodeAt(0)*256+(x[i*2+1]||String.fromCharCode(0)).charCodeAt(0))+128);
   return y;
 }
 pixel8.decode = (x) => {
   let y="";
   x=x.split("");
-  for (i=0;i<x.length;i++) y+=String.fromCharCode((x[i].charCodeAt(0))%256-65536)+String.fromCharCode(Math.round((x[i].charCodeAt(0))/256)-65536);
+  for (i=0;i<x.length;i++) y+=String.fromCharCode(Math.round((x[i].charCodeAt(0)-128)/256))+String.fromCharCode((x[i].charCodeAt(0))%256-128);
   return y;
 }
 pixel8.input = input.value;
@@ -172,7 +172,7 @@ pixel8.canvas.onclick=function(){
   }
 }
 function update() {
-  console.clear();
+  //console.clear();
   requestAnimationFrame(update);
   pixel8.ctx.clearRect(0,0,pixel8.canvas.width,pixel8.canvas.height);
   pixel8.cursor = 0;
@@ -197,7 +197,7 @@ function update() {
     case -2 :
       input.style.display="none";
       pixel8.ctx.fillStyle = pixel8.palette[2];
-      var str = "Welcome to Pixel-8 0.3\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
+      var str = "Welcome to Pixel-8 0.45\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
       for (i in str) {
         pixel8.ctx.fillText(str[i],1,3+i*5);
       }
@@ -205,6 +205,9 @@ function update() {
     //--Editor--//
     case 0: 
       input.style.display="block";
+      if (stat(7)>10) {
+        pixel8.cursor = 3;
+      }
       rectfill(64,121,122,8,pixel8.palette[2]);
       pixel8.ctx.fillStyle = pixel8.palette[1];
       txt=pixel8.encode(pixel8.input).length;
@@ -244,7 +247,7 @@ function update() {
         }
       }
       if (btn(130,61,4,0,4,7)) cam(0,0),pixel8.page=0;
-      if (btn(246,61,8,0,4,7)) copyText("https://Nxrix.github.io/Pixel-8?cart="+pixel8.encode(pixel8.input));
+      if (btn(246,61,8,0,4,7)) copyText(url.origin+"/?cart="+pixel8.encode(pixel8.input));
       break;
   }
   //--camera--//
