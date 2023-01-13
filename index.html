@@ -10,10 +10,9 @@
 </head>
 
 <body res="128"></body>
-
 <script src="js/pixel8.js"></script>
 <script>
-pixel8.input = "col=x|y;";
+pixel8.input = "col=x|y";
 pixel8.encode = (x) => {
   var y="";
   x=x.split("");
@@ -36,47 +35,33 @@ if (cart!=undefined) {
 }
 let t=0;
 const scale = 4;
-let sr=0;
 const w=pixel8.res/scale;
 const c=w/2-.5;
 const n=256/w;
 let vec=[];
 function update() {
-  console.clear();
-  requestAnimationFrame(update);
+  //console.clear();
+  //requestAnimationFrame(update);
   cls();
-  i=0;
-  while (i<w) {
-    j=0;
-    while (j<w) {
-      x=i,y=j;sx=i;sy=j;sz=1;
-      col=2;
+  var sz=1;
+  for (var i=0;i<w;i++) {
+    for (var j=0;j<w;j++) {
+      var x=i;var y=j;var sx=i;var sy=j;
+      var col=2;
       eval(pixel8.input);
       vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
-      j++;
     }
-    i++;
   }
   vec.sort((v1,v2) => {
     return v2.z - v1.z;
   });
-  l=vec.length;
-  i=0;
-  while(i<l) {
+  for (i in vec) {
     [sx,sy,sz,col]=[vec[i].x,vec[i].y,vec[i].z,vec[i].c];
     if (sz>0) {
-      sx=Math.round(sx*scale);
-      sy=Math.round(sy*scale);
-      if (isNaN(col)) {
-        col1=eval("pixel8.xyzn"+col);
-        pixs(sx,sy,col1.x,col1.y,col1.z,2,scale);
-      }
-      else {
-        pixel8.ctx.fillStyle = ((pixel8.palette[Math.round(col||2)%pixel8.palette.length])||col);
-        pixel8.ctx.fillRect(sx,sy,scale+sr,scale+sr);
-      }
+      sx=sx*scale+scale/2;
+      sy=sy*scale+scale/2;
+      rectfill(sx,sy,scale,scale,pixel8.palette[Math.round(col||2)%32]);
     }
-    i++;
   }
   t++;
 }
