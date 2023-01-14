@@ -29,9 +29,6 @@
   overflow-y: scroll;
   display: none;
 }
-#input::-webkit-scrollbar {
-  width: calc((100vw/128) * 5);
-}
 #input::-webkit-scrollbar-track {
   background: rgb(49,51,113);
 }
@@ -49,11 +46,17 @@
     width: calc((100vw/128) * 122);
     height: calc((100vw/128) * 102);
   }
+  #input::-webkit-scrollbar {
+    width: calc((100vw/128) * 5);
+  }
 }
 @media (orientation: landscape) {
   #input {
     width: calc((100vmin/128) * 122);
     height: calc((100%/128) * 102);
+  }
+  #input::-webkit-scrollbar {
+    width: calc((100vh/128) * 5);
   }
 }
 </style>
