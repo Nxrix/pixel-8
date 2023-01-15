@@ -1,10 +1,10 @@
 # Pixel-8
-tiny Fantasy Console and JavaScript library for making tiny games or art
+tiny Fantasy Console and JavaScript library for making small games or art
 
 ![Pixel-8](img/icon.png "pixel-8")
 
 # Specifications
-| ‌ | ‌ |
+| ‌‌‌‌‌‌‌item | limits ‌‌|
 | - | - |
 | Display        | 32x32 |
 | Cart           | 2024 char |
