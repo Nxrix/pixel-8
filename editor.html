@@ -2,6 +2,12 @@
 <html>
 
 <head>
+
+<script>
+//window.onerror = function(message, url, lineNumber) {  
+  //return lineNumber; 
+//};
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="theme-color" content="#262637">
@@ -20,14 +26,16 @@
   cursor: none;
 }
 #input {
-  cursor: none;
   background: #0000;
   position: fixed;
   resize: none;
   border: none;
-  line-height: calc((100vw/128) * 8);
+  line-height: calc((100vmin/128) * 8);
   overflow-y: scroll;
   display: none;
+}
+#input::-webkit-scrollbar {
+  width: calc((100vmin/128) * 5);
 }
 #input::-webkit-scrollbar-track {
   background: rgb(49,51,113);
@@ -41,23 +49,9 @@
 #input:focus {
   outline: none;
 }
-@media (orientation: portrait) {
-  #input {
-    width: calc((100vw/128) * 122);
-    height: calc((100vw/128) * 102);
-  }
-  #input::-webkit-scrollbar {
-    width: calc((100vw/128) * 5);
-  }
-}
-@media (orientation: landscape) {
-  #input {
-    width: calc((100vmin/128) * 122);
-    height: calc((100%/128) * 102);
-  }
-  #input::-webkit-scrollbar {
-    width: calc((100vh/128) * 5);
-  }
+#input {
+  width: calc((100vmin/128) * 122);
+  height: calc((100vmin/128) * 102);
 }
 </style>
 
@@ -140,15 +134,18 @@ function btn(x,y,i,j,d,s) {
 }
 pixel8.encode = (x) => {
   var y="";
-  x=x.split("");
-  var l=Math.round(x.length/2);
-  for (i=0;i<l;i++) y+=String.fromCharCode((x[i*2].charCodeAt(0)*256+(x[i*2+1]||String.fromCharCode(0)).charCodeAt(0))+128);
+  var x=x.split("");
+  var l=Math.ceil(x.length/2);
+  for (i=0;i<l;i++) y+=String.fromCharCode(
+      (x[i*2].charCodeAt(0)*256+
+      (x[i*2+1]||String.fromCharCode(32)).charCodeAt(0)+128)
+  );
   return y;
 }
 pixel8.decode = (x) => {
-  let y="";
-  x=x.split("");
-  for (i=0;i<x.length;i++) y+=String.fromCharCode(Math.round((x[i].charCodeAt(0)-128)/256))+String.fromCharCode((x[i].charCodeAt(0))%256-128);
+  var y="";
+  var x=x.split("");
+  for (i=0;i<x.length;i++) y+=String.fromCharCode(Math.round((x[i].charCodeAt(0)-128)/256))+String.fromCharCode((x[i].charCodeAt(0)-128)%256);
   return y;
 }
 pixel8.input = input.value;
@@ -195,7 +192,7 @@ function update() {
     case -2 :
       input.style.display="none";
       pixel8.ctx.fillStyle = pixel8.palette[2];
-      var str = "Welcome to Pixel-8 0.45\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
+      var str = "Welcome to Pixel-8 0.5\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
       for (i in str) {
         pixel8.ctx.fillText(str[i],1,3+i*5);
       }
@@ -210,7 +207,7 @@ function update() {
       pixel8.ctx.fillStyle = pixel8.palette[1];
       txt=pixel8.encode(pixel8.input).length;
       pixel8.ctx.fillText("url length:",4,112);
-      pixel8.ctx.fillText(txt,125-pixel8.ctx.measureText(txt).width,112);
+      pixel8.ctx.fillText(txt+"/1024",125-pixel8.ctx.measureText(txt+"/1024").width,112);
       rect(64,69,125,115,pixel8.palette[2]);
       for (var i=0;i<w;i++) {
         for (var j=0;j<w;j++) {
@@ -230,7 +227,7 @@ function update() {
           var x=i;var y=j;var sx=i;var sy=j;
           var col=2;
           eval(pixel8.input);
-          vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
+          vec[i+j*w] = {x:sx,y:sy,z:sz,c:col};
         }
       }
       vec.sort((v1,v2) => {

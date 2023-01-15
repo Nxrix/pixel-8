@@ -14,16 +14,19 @@
 <script>
 pixel8.input = "col=x|y";
 pixel8.encode = (x) => {
-  var y="";
-  x=x.split("");
-  var l=Math.round(x.length/2);
-  for (i=0;i<l;i++) y+=String.fromCharCode((x[i*2].charCodeAt(0)*256+(x[i*2+1]||String.fromCharCode(0)).charCodeAt(0))+128);
+  var y = "";
+  var x = x.split("");
+  var l = Math.ceil(x.length / 2);
+  for (i = 0; i < l; i++) y += String.fromCharCode(
+    (x[i * 2].charCodeAt(0) * 256 +
+      (x[i * 2 + 1] || String.fromCharCode(32)).charCodeAt(0) + 128)
+  );
   return y;
 }
 pixel8.decode = (x) => {
-  let y="";
-  x=x.split("");
-  for (i=0;i<x.length;i++) y+=String.fromCharCode(Math.round((x[i].charCodeAt(0)-128)/256))+String.fromCharCode((x[i].charCodeAt(0))%256-128);
+  var y = "";
+  var x = x.split("");
+  for (i = 0; i < x.length; i++) y += String.fromCharCode(Math.round((x[i].charCodeAt(0) - 128) / 256)) + String.fromCharCode((x[i].charCodeAt(0) - 128) % 256);
   return y;
 }
 const url_string = window.location.href;
@@ -40,7 +43,6 @@ const c=w/2-.5;
 const n=256/w;
 let vec=[];
 function update() {
-  console.clear();
   requestAnimationFrame(update);
   cls();
   var sz=1;
@@ -49,7 +51,7 @@ function update() {
       var x=i;var y=j;var sx=i;var sy=j;
       var col=2;
       eval(pixel8.input);
-      vec[x+y*w] = {x:sx,y:sy,z:sz,c:col};
+      vec[i+j*w] = {x:sx,y:sy,z:sz,c:col};
     }
   }
   vec.sort((v1,v2) => {
