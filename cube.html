@@ -10,7 +10,7 @@
 </head>
 
 <body res="128"><img src="pattern.png" id="pattern" hidden><canvas width="4" height="4" id="canvasP" hidden></canvas></body>
-<script src="js/pixel8.js"></script>
+<script src="https://nxrix.github.io/Pixel-8/js/pixel8.js"></script>
 <script>
 const prs = (r,g,b) => {
   r = Math.max(Math.min(r,255),0);
@@ -36,6 +36,9 @@ const trifill2 = (x,y,x1,y1,x2,y2,x3,y3,c) => {
   pixel8.ctx.lineTo(x2,y2);
   pixel8.ctx.lineTo(x3,y3);
   pixel8.ctx.fill();
+}
+scale = (x,y,s,i,j) => {
+  return [(x-i)*s+i,(y-(j||i))*s+(j||i)];
 }
 rota = (x,y,a,i,j) => {
   radians = (Math.PI / 180) * a;
@@ -76,8 +79,8 @@ update = () => {
   for (i in vs) {
     vs1[i]=rotab(vs[i][0],vs[i][1],vs[i][2],t,t,0);
     vs1[i][2]=vs1[i][2]+6;
-    [vs1[i][0],vs1[i][1]]=scl(vs1[i][0],vs1[i][1],16/vs1[i][2],0);
-    [vs1[i][0],vs1[i][1]]=scl(vs1[i][0]+pixel8.res/16,vs1[i][1]+pixel8.res/16,8,0);
+    [vs1[i][0],vs1[i][1]]=scale(vs1[i][0],vs1[i][1],16/vs1[i][2],0);
+    [vs1[i][0],vs1[i][1]]=scale(vs1[i][0]+pixel8.res/16,vs1[i][1]+pixel8.res/16,8,0);
   }
   cs.sort((v1,v2) => {
     return(vs1[v2[0]][2]+vs1[v2[1]][2]+vs1[v2[2]][2]+vs1[v2[3]][2])/4-(vs1[v1[0]][2]+vs1[v1[1]][2]+vs1[v1[2]][2]+vs1[v1[3]][2])/4
