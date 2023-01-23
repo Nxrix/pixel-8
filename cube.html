@@ -37,9 +37,17 @@ const trifill2 = (x,y,x1,y1,x2,y2,x3,y3,c) => {
   pixel8.ctx.lineTo(x3,y3);
   pixel8.ctx.fill();
 }
+rota = (x,y,a,i,j) => {
+  radians = (Math.PI / 180) * a;
+  var c = Math.cos(radians);
+  var s = Math.sin(radians);
+  nx = (c * (x - i)) + (s * (y - (j||i))) + i;
+  ny = (c * (y - (j||i))) - (s * (x - i)) + (j||i);
+  return [nx,ny];
+}
 rotab = (x,y,z,a,b,i,j,k) => {
-  [x,y]=rot(x,y,a,i,j||i);
-  [y,z]=rot(y,z,b,j||i,k||i);
+  [x,y]=rota(x,y,a,i,j||i);
+  [y,z]=rota(y,z,b,j||i,k||i);
   return [x,y,z];
 }
 t=0;
