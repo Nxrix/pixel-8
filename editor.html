@@ -171,7 +171,7 @@ function update() {
       var sn=sin(t/16);
       sspr(64-16*sn,64-20,32*sn,32,0,0,7,7);
       pixel8.ctx.fillStyle = pixel8.palette[2];
-      pixel8.ctx.fillText("Pixel-8",52,80);
+      pixel8.ctx.fillText("pixel-8",52,80);
       var note = [1,3,4,2,5];
       if (t%6==0&&t<60) {
         pixel8.note(note[(t/6)%5]*256,"square",.5);
@@ -186,7 +186,7 @@ function update() {
     case -2 :
       input.style.display="none";
       pixel8.ctx.fillStyle = pixel8.palette[2];
-      var str = "Welcome to Pixel-8 0.5\n(c) 2022 - 2023 Toxel , Nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
+      var str = "welcome to pixel-8 0.5\n(c) 2022 - 2023 toxel , nxrix\n\nManual:\n> sx,sy,sz are for screen pixels\n> x,y are for 2d loop of pixels\n> i,j are predefined for loop!\n> t is used for time".split("\n");
       for (i in str) {
         pixel8.ctx.fillText(str[i],1,3+i*5);
       }
