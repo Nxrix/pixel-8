@@ -9,7 +9,7 @@ const pixel8 = [];
 pixel8.style = `
 @font-face {
   font-family: pixel8;
-  src: url("https://nxrix.github.io/Pixel-8/pixel-8.ttf") format("truetype");
+  src: url("../fonts/pixel-8.ttf") format("truetype");
 }
 * {
   margin: 0;
