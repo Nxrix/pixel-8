@@ -1,5 +1,5 @@
-//Pixel8 Fantasy console
-//All Rights Reserved 2023 Nxrix,Toxel
+//-- Pixel8 Fantasy console --/
+//-- Nxrix --//
 
 const $ = function(id) { return document.getElementById(id); }
 
@@ -9,16 +9,13 @@ const pixel8 = [];
 pixel8.style = `
 @font-face {
   font-family: pixel8;
-  src: url("https://nxrix.github.io/Pixel-8/pixel-8.ttf") format("truetype");
+  src: url("font/pixel-8.ttf") format("truetype");
 }
 * {
   margin: 0;
   padding: 0;
   color: white;
-  font-smooth: never;
-  font-smoothing: never;
-  -webkit-font-smooth: never;
-  -webkit-font-smoothing: never;
+  -webkit-font-smoothing: none;
   font-family: pixel8;
   color: #fff;
   font-size: calc(100vw/8);
@@ -37,10 +34,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-#pixel8_screen {
-  width: 100vw;
-  height: 100%;
-}
 #pixel8_canvas {
   width: 100%;
   image-rendering: pixelated;
@@ -56,17 +49,12 @@ body {
   }
 }`;
 if (document.body.getAttribute("init")=="f") {
-  //pixel8.screen = $("pixel8_screen");
   pixel8.canvas = $("pixel8_canvas");
 }
 else {
   pixel8.styleSheet = document.createElement("style");
   pixel8.styleSheet.innerText = pixel8.style;
   document.head.appendChild(pixel8.styleSheet);
-  //--main div--//
-  /*pixel8.screen = document.createElement("div");
-  pixel8.screen.id = "pixel8_screen";
-  document.body.appendChild(pixel8.screen);*/
   //--canvas--//
   pixel8.canvas = document.createElement("canvas");
   pixel8.canvas.id = "pixel8_canvas";
@@ -74,6 +62,7 @@ else {
 }
 pixel8.ctx = pixel8.canvas.getContext("2d");
 pixel8.res = document.body.getAttribute("res")||128;
+pixel8.center = pixel8.res/2;
 pixel8.canvas.width = pixel8.res;
 pixel8.canvas.height = pixel8.res;
 
@@ -110,7 +99,6 @@ pixel8.xyznrgb = (r,g,b) => {
 }
 
 pixel8.palette = [];
-
 pixel8.colors = [
   "rgb(220,221,255)",
   "rgb(255,26,94)",
@@ -148,16 +136,16 @@ pixel8.colors = [
 
 for (let x = 0; x < 8; x++) {
   for (let y = 0; y < 4; y++) {
-    var i = y*8 + x;
+    var i = y*8+x;
     pixel8.palette[x*4+y] = pixel8.colors[i];
   }
 }
+pixel8.colors=pixel8.palette;
 
 if ($("sprite")!=undefined) {
   pixel8.sprite = $("sprite");
   pixel8.sprite.style.display = "none";
 }
-
 
 //--Bayer Matrix Arrays--//
 
@@ -183,52 +171,87 @@ pixel8.bayer8 = [
 
 //font
 pixel8.ctx.font = "16px pixel8";
+pixel8.ctx.textBaseline = "top";
 
 const cls = (x) => {
   pixel8.ctx.clearRect(0,0,pixel8.canvas.width,pixel8.canvas.height);
-  pixel8.canvas.style.background = x;
+  pixel8.canvas.style.background = pixel8.palette[parseInt(x)%32];
 }
 
 const pow = (x,y) => {
   return Math.pow(x,y);
 }
-
+const sqrt = (x) => {
+  return Math.sqrt(x);
+}
+const cbrt = (x) => {
+  return Math.cbrt(x);
+}
+const abs = (x) => {
+  return Math.abs(x);
+}
 const rnd = (x) => {
   return Math.random() * (x || 1);
 }
-
 const flr = (x) => {
   return Math.floor(x);
 }
-
 const deg = (x) => {
   return x * Math.PI / 180;
 }
-
 const sin = (x) => {
   return Math.sin(x);
 }
-
+const asin = (x) => {
+  return Math.asin(x);
+}
 const cos = (x) => {
   return Math.cos(x);
 }
+const acos = (x) => {
+  return Math.acos(x);
+}
+const tan = (x) => {
+  return Math.tan(x);
+}
+const atan = (x) => {
+  return Math.atan(x);
+}
+const atan2 = (x) => {
+  return Math.atan2(x);
+}
+
 
 //--rotate x,y by z--//
-const rot = (x1,y1,x,y,a) => {
+const rot = (x,y,a,i,j) => {
   radians = (Math.PI / 180) * a;
   var c = Math.cos(radians);
   var s = Math.sin(radians);
-  nx = (c * (x - x1)) + (s * (y - y1)) + x1;
-  ny = (c * (y - y1)) - (s * (x - x1)) + y1;
+  nx = (c * (x - i)) + (s * (y - (j||i))) + i;
+  ny = (c * (y - (j||i))) - (s * (x - i)) + (j||i);
   return [nx,ny];
 }
 
-//dist3D({x:1,y:2,z:3},{x:3,y:2,z:1});
+const rot2 = (x,y,z,a,b,i,j,k) => {
+  [x,y]=rot(x,y,a,i,j||i);
+  [y,z]=rot(y,z,b,j||i,k||i);
+  return [x,y,z];
+}
+
+const scl = (x,s,i) => {
+  return ((x-i)*s+i);
+}
+const scl2 = (x,y,s,i,j) => {
+  return [(x-i)*s+i,(y-(j||i))*s+(j||i)];
+}
+
+//dist2D({x:1,y:2},{x:3,y:2});
 const dist2D = (v1, v2) => {
   a = v2.x - v1.x;
   b = v2.y - v1.y;
   return Math.hypot(a,b);
 }
+//dist3D({x:1,y:2,z:3},{x:3,y:2,z:1});
 const dist3D = (v1, v2) => {
   a = v2.x - v1.x;
   b = v2.y - v1.y;
@@ -241,7 +264,7 @@ const lookAt2D = (v1,v2) => {
   return Math.atan2(v2.y - v1.y, v2.x - v1.x) * 180 / Math.PI;
 }
 const lookAt3D = (v1,v2) => {
-  return Math.atan2(v2.y - v1.y, v2.x - v1.x) * 180 / Math.PI;
+  return [Math.atan2(v2.z - v1.z, v2.x - v1.x) * 180 / Math.PI,Math.atan2(v2.z - v1.z, v2.y - v1.y) * 180 / Math.PI];
 }
 
 //--RGB to index--//
@@ -264,15 +287,15 @@ const rgb2color = (r,g,b) => {
   return "rgb("+r+","+g+","+b+")";
 }
 
-//--drawing functions--//
-
-//camera
+//--camera--//
 const camera = (x,y) => {
   pixel8.camx = x;
   pixel8.camy = y;
 }
+
 camera(0,0);
 
+//--drawing functions--//
 pixel8.rgbPalette = new Image();
 pixel8.scripts = document.getElementsByTagName("script");
 pixel8.src = pixel8.scripts[pixel8.scripts.length-1].src;
@@ -293,7 +316,7 @@ const pset = (x,y,c) => {
   x = Math.round(x-pixel8.camx);
   y = Math.round(y-pixel8.camy);
   pixel8.ctx.beginPath();
-  pixel8.ctx.fillStyle = c;
+  pixel8.ctx.fillStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.fillRect(x,y,1,1);
   pixel8.ctx.fill();
 }
@@ -328,7 +351,7 @@ const circ = (x,y,s,c,w) => {
   s = Math.round(s);
   pixel8.ctx.beginPath();
   pixel8.ctx.arc(x,y,s,0,2*Math.PI);
-  pixel8.ctx.strokeStyle = c;
+  pixel8.ctx.strokeStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.lineWidth = w || 1;
   pixel8.ctx.stroke();
 }
@@ -339,7 +362,7 @@ const circfill = (x,y,s,c) => {
   s = Math.round(s);
   pixel8.ctx.beginPath();
   pixel8.ctx.arc(x,y,s,0,2*Math.PI);
-  pixel8.ctx.fillStyle = c;
+  pixel8.ctx.fillStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.fill();
 }
 
@@ -350,27 +373,27 @@ const line = (x,y,x1,y1,c,w) => {
   y1 = Math.round(y1-pixel8.camy);
   pixel8.ctx.beginPath();
   pixel8.ctx.moveTo(x,y);
-  pixel8.ctx.strokeStyle = c;
+  pixel8.ctx.strokeStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.lineWidth = w || 1;
   pixel8.ctx.stroke();
 }
 
 const rectfill = (x,y,sx,sy,c) => {
-  x = Math.round(x-pixel8.camx)-sx/2;
-  y = Math.round(y-pixel8.camy)-sy/2;
+  x = Math.round(x-pixel8.camx);
+  y = Math.round(y-pixel8.camy);
   sx = Math.round(sx);
   sy = Math.round(sy);
   pixel8.ctx.beginPath();
-  pixel8.ctx.fillStyle = c;
+  pixel8.ctx.fillStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.fillRect(x,y,sx,sy);
   pixel8.ctx.fill();
 }
 
 const rect = (x,y,sx,sy,c,w) => {
-  x = Math.round(x-pixel8.camx)-sx/2;
-  y = Math.round(y-pixel8.camy)-sy/2;
+  x = x-pixel8.camx;
+  y = y-pixel8.camy;
   pixel8.ctx.beginPath();
-  pixel8.ctx.strokeStyle = c;
+  pixel8.ctx.strokeStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.lineWidth = w || 1;
   pixel8.ctx.strokeRect(x,y,sx,sy);
   pixel8.ctx.stroke();
@@ -386,7 +409,7 @@ const rectrot = (x,y,sx,sy,c,r) => {
   pixel8.ctx.translate(x+sx/2,y+sy/2);
   pixel8.ctx.rotate(r * (Math.PI/180));
   pixel8.ctx.translate(-x-sx/2,-y-sy/2);
-  pixel8.ctx.fillStyle = c;
+  pixel8.ctx.fillStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.fillRect(x,y,sx,sy);
   pixel8.ctx.fill()
   pixel8.ctx.restore();
@@ -400,11 +423,20 @@ const trifill = (x,y,x1,y1,x2,y2,c) => {
   x2 = Math.round(x2-pixel8.camx);
   y2 = Math.round(y2-pixel8.camy);
   pixel8.ctx.beginPath();
-  pixel8.ctx.fillStyle = c;
+  pixel8.ctx.fillStyle = pixel8.palette[parseInt(c)%32];
   pixel8.ctx.moveTo(x,y);
   pixel8.ctx.lineTo(x1,y1);
   pixel8.ctx.lineTo(x2,y2);
   pixel8.ctx.fill();
+}
+
+const print = (t,x,y,c) => {
+  pixel8.ctx.filter = `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><filter id="f" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncA type="discrete" tableValues="0 1"/></feComponentTransfer></filter></svg>#f')`;
+  pixel8.ctx.beginPath();
+  pixel8.ctx.fillStyle = pixel8.palette[parseInt(c)%32];
+  pixel8.ctx.fillText(t,Math.round(x),Math.round(y-7));
+  pixel8.ctx.fill();
+  pixel8.ctx.filter = "none";
 }
 
 //--make canvas context render without antialiasing--//
