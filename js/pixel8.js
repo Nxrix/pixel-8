@@ -299,7 +299,7 @@ camera(0,0);
 pixel8.rgbPalette = new Image();
 pixel8.scripts = document.getElementsByTagName("script");
 pixel8.src = pixel8.scripts[pixel8.scripts.length-1].src;
-pixel8.rgbPalette.src = pixel8.src.split("pixel8.js")[0]+"i128.png";
+pixel8.rgbPalette.src = pixel8.src.split("js/pixel8.js")[0]+"img/i128.png";
 
 const pixs = (x,y,r,g,b,s,w) => {
   x = Math.round(x-pixel8.camx);
