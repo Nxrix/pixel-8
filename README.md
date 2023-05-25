@@ -1,7 +1,7 @@
 # Pixel-8
 tiny Fantasy Console and JavaScript library for making tiny games or art
 
-![Pixel-8](img/icon.png "Pixel-8")
+<img src="img/icon.png" width="100"/>
 
 # Specifications for editor
 | ‌  | ‌  |
@@ -30,7 +30,7 @@ tiny Fantasy Console and JavaScript library for making tiny games or art
 * the console is a javascript environment that will return results and errors of command.
 
 ## Code tabs
-![Pixel-8 code tabs](img/code-tabs.png "Pixel-8 code tabs")
+<img src="img/code-tabs.png" width="400"/>
 * (init) tab code will just execute once when the cartridge starts running
 
 * (update) tab code will execute every frame
