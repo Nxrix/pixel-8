@@ -1,7 +1,7 @@
 
 @font-face {
   font-family: font;
-  src: url("font/ggsans-Semibold.ttf") format("truetype");
+  src: url("../font/ggsans-Semibold.ttf") format("truetype");
 }
 * {
   -webkit-tap-highlight-color: transparent;
