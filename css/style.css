@@ -1,0 +1,136 @@
+
+@font-face {
+  font-family: font;
+  src: url("font/ggsans-Semibold.ttf") format("truetype");
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+.language-js * {
+  font-family: pixel8;
+}
+::selection {
+  color: #191a30;
+  background: #dcddff;
+}
+.play {
+  position: fixed;
+  width: var(--vmin);
+  height: var(--vmin);
+  z-index: 2;
+  image-rendering: pixelated;
+}
+.consolebtn {
+  user-select: none;
+  width: 7.5vmin;
+  height: 7.5vmin;
+  top: 2vmin;
+  left: 2vmin;
+  background: #242535;
+  position: absolute;
+  transition: .25s ease;
+  border: none;
+  border-radius: .5vmin;
+  border-bottom: solid 1vmin #0e0f18;
+  box-shadow: 0 0 0 .25vmin #3e4061;
+}
+.consolebtn:active {
+  transform: translateY(1vmin);
+  background: #ff0040;
+  height: 6.5vmin;
+  border-bottom: solid 0vmin #920f30;
+  box-shadow: 0 0 0 .25vmin #ff386a;
+}
+#pixel8_console {
+  padding: calc(var(--vmin)/100*2.5);
+  position: absolute;
+  font-family: font;
+  font-size: calc(var(--vmin)/100*2.5);
+  background: #0e0f18;
+  transition: .25s ease;
+  width: calc(var(--vmin)/100*90);
+  height: calc(var(--vmin)/100*90);
+  border-radius: 1.5vmin;
+  box-shadow: 0 0 0 .25vmin #4d4e75;
+  top: calc(var(--vh)/2-var(--vmin));
+  left: calc(var(--vw)/2-var(--vmin));
+  transform: scale(0);
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+#pixel8_console_div {
+  width: calc(var(--vmin)/100*90);
+  height: calc((var(--vmin)/100*90) - (var(--vmin)/100*12));
+  white-space: pre;
+  overflow: auto;
+}
+#pixel8_console * {
+  font-family: font;
+  font-size: calc(var(--vmin)/100*4);
+}
+#pixel8_console_input {
+  background: #32354d;
+  color: #979CD3;
+  caret-color: #979CD3;
+  font-family: font;
+  font-size: calc(var(--vmin)/100*4);
+  width: calc(var(--vmin)/100*87.5);
+  height: calc(var(--vmin)/100*5.5);
+  position: absolute;
+  border: 0;
+  padding: calc(var(--vmin)/100*2.5);
+  left: calc(var(--vmin)/100*1.25);
+  bottom: calc(var(--vh)/100*1.5);
+  border-radius: 1.25vmin;
+}
+#pixel8_console_input:focus {
+  outline: 0;
+}
+#pixel8_console_input::placeholder {
+  color: #686C98
+}
+#pixel8_console img {
+  width: calc(var(--vmin)/3);
+  user-select: none;
+}
+#pixel8_canvas {
+  cursor: none;
+}
+#input {
+  color: #0000;
+}
+#input,#input_syntax {
+  background: #0000;
+  position: fixed;
+  resize: none;
+  border: none;
+  vertical-align:bottom;
+  overflow-y: scroll;
+  display: none;
+  cursor: none;
+  touch-action: none;
+  caret-color: #fff;
+}
+#input::-webkit-scrollbar {
+  width: calc((100vmin/128) * 5);
+}
+#input::-webkit-scrollbar-track {
+  background: rgb(49,51,113);
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(134,134,207);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(220,221,255);
+}
+#input:focus {
+  outline: none;
+}
+#input_syntax {
+  position: fixed;
+  line-break: strict;
+  overflow-y: auto;
+}
+#input_syntax::-webkit-scrollbar {
+  display: none;
+}
