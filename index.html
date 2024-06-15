@@ -204,8 +204,8 @@ const decodetype2 = (str) => {
 const page = async (n) => {
   current = Math.max(n,0);
   list.innerHTML = "loading...";
-  cpage.innerHTML = n;
-  var data = await getlist(n);
+  cpage.innerHTML = Math.max(n,0);
+  var data = await getlist(Math.max(n,0));
   data = data.data.transactions;
   list.innerHTML = "";
   for (var i in data) {
