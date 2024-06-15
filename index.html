@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="../assets/">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/beta.css">
+  <script src="./js/tonconnect-ui.min.js"></script>
+  <title>main</title>
+</head>
+<body>
+  <div class="view">
+    <div class="top_bar">
+      <div class="content">
+        <div class="icon">
+          <img src="./img/icon.png">
+        </div>
+        <div class="title">Pixel-8</div>
+        <div class="fullscreen" onclick="fullscreen()"><i class="material-symbols-outlined">open_in_new</i></div>
+      </div>
+    </div>
+    <div class="wrapper">
+      <div class="body full">
+        <div class="scroll_wrapper">
+          <div class="content">
+            <div class="page active">
+              <h3>Welcome to Beta :)</h3>
+              <ul>
+                <li>This is just a demo showing what Px8 can do, and more important things will be shown later!</li>
+                <li>Here there is a canvas that you can draw, and a gallery where you can see other things people have sent to the public Px8 TON address</li>
+              </ul>
+              <br>
+              <h3>Draw & Share</h3>
+              <div class="screen">
+                <div id="canvas"></div>
+                <div id="palette"></div>
+              </div>
+              <div class="connect"><div id="ton-connect"></div></div>
+              <div id="send">Send</div>
+              <h2>View</h2>
+              <div class="selectpage">
+                <div onclick="page(current-1)">Previous</div>
+                <div id="cpage"></div>
+                <div onclick="page(current+1)">Next</div>
+              </div>
+              <br>
+              <div id="list"></div>
+              <footer class="footer">
+                <section class="about">
+                  <div class="text">
+                    <div class="icon">
+                      <img class="pixelated" src="./img/svg/deer.svg">
+                    </div>
+                    <p class="description">
+                      Nxrix - 2024 All rights reserved.
+                    </p>
+                  </div>
+                  <ul class="links">
+                    <li>Social</li>
+                    <li><a href="https://github.com/Nxrix" target="_blank">Github</a></li>
+                    <li><a href="https://t.me/Pixel8_App">Telegram</a></li>
+                    <li hidden><a>Twitter</a></li>
+                  </ul>
+                  <ul class="links">
+                    <li>Pixel-8</li>
+                    <li><a href="https://github.com/Nxrix/pixel-8" target="_blank">Source</a></li>
+                    <li><a href="https://t.me/Pixel8_App">Channel</a></li>
+                    <li hidden><a href="https://t.me/Pixel8Bot">TMA</a></li>
+                  </ul>
+                </section>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen_size_error">Device height is too small for landscape view :(</div>
+  </div>
+</body>
+<script src="./js/screen.js"></script>
+<script src="./js/utils.js"></script>
+<script src="./js/tonweb.js"></script>
+<script src="./js/lz-string.js"></script>
+<script>
+
+const colors = [
+  [0x1d,0x18,0x26],
+  [0x8b,0x7f,0xb0],
+  [0xc3,0xbe,0xe5],
+  [0xff,0xe8,0xe9],
+  [0x65,0x26,0x4e],
+  [0xa0,0x1a,0x3d],
+  [0xde,0x1b,0x45],
+  [0xf2,0x63,0x7b],
+  [0x8b,0x3f,0x39],
+  [0xbb,0x45,0x31],
+  [0xef,0x5d,0x0e],
+  [0xff,0x95,0x00],
+  [0x00,0xa0,0x3d],
+  [0x12,0xd5,0x00],
+  [0xb4,0xd8,0x00],
+  [0xff,0xc3,0x1f],
+  [0x00,0x6e,0x69],
+  [0x00,0xae,0x85],
+  [0x00,0xda,0xa7],
+  [0x4f,0xd6,0xff],
+  [0x2b,0x27,0x54],
+  [0x3c,0x51,0xaf],
+  [0x18,0x88,0xde],
+  [0x00,0xa9,0xe1],
+  [0x59,0x3c,0x97],
+  [0x89,0x44,0xcf],
+  [0xb4,0x4a,0xff],
+  [0xe9,0x59,0xff],
+  [0xe7,0x87,0x6d],
+  [0xff,0xba,0x8c],
+  [0xff,0xef,0x5c],
+  [0xff,0x9c,0xde]
+];
+
+const scale = 9;
+const pixels = new Uint8Array(scale**2);
+selected = 3;
+
+const setcolor = (n,d) => {
+  selected = n;
+  var colors = document.querySelectorAll(".color");
+  for (var i=0;i<32;i++) {
+    var div = colors[i];
+    if (div.classList.contains("active")) {
+      div.classList.remove("active");
+    } else {
+      if (div==d) div.classList.add("active");
+    }
+  }
+}
+
+const setpix = (i,j,d) => {
+  var color = colors[selected];
+  var rgb = color[0]+","+color[1]+","+color[2];
+  d.style.background = `rgb(${rgb})`;
+  pixels[i+j*scale] = (selected|0)&31;
+}
+
+for (var i=0;i<scale;i++) {
+  for (var j=0;j<scale;j++) {
+    canvas.innerHTML += `<div class="pixel" onclick="setpix(${i},${j},this)"></div>`
+  }
+}
+
+for (var i=0;i<4;i++) {
+  for (var j=0;j<8;j++) {
+    var color = colors[i+j*4];
+    var rgb = color[0]+","+color[1]+","+color[2];
+    palette.innerHTML += `<div class="color" style="background-color:rgb(${rgb})" onclick="setcolor(${i+j*4},this)"></div>`
+  }
+}
+
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+  manifestUrl: "https://raw.githubusercontent.com/ton-connect/demo-dapp/master/public/tonconnect-manifest.json",
+  buttonRootId: "ton-connect"
+});
+
+
+const getlist = async (n) => {
+  var json = await fetch("https://dton.io/graphql", {
+    "headers": {
+      "accept": "application/json, multipart/mixed",
+      "content-type": "application/json",
+    },
+    "referrer": "https://dton.io/graphql",
+    "body": JSON.stringify({"query":`{
+        transactions(
+          address_friendly: "UQAVpGKyMFKvBaW-slEBY5Cx7epYDDAefMTKoRQU9NgZ_p9_"
+          page: ${n}
+          page_size: 16
+        ) {
+          in_msg_value_grams
+          in_msg_comment
+          in_msg_hash
+        }
+      }`}),
+    "method": "POST"
+  });
+  var data = await json.json();
+  return data;
+}
+
+const decodetype2 = (str) => {
+  var sign = str.substr(0,4);
+  var types = utils.decode8(str.substr(4).substr(0,2));
+  var data = str.substr(4).substr(2);
+  data = types[3]==1?LZString.decompress(data):data;
+  var pixels = utils.decode(data.substr(1),5);
+  var size = utils.decode8(data.substr(0,1))
+  return {
+    types: types,
+    pixels: pixels,
+    size: size
+  }
+}
+
+const page = async (n) => {
+  current = Math.max(n,0);
+  list.innerHTML = "loading...";
+  cpage.innerHTML = n;
+  var data = await getlist(n);
+  data = data.data.transactions;
+  list.innerHTML = "";
+  for (var i in data) {
+    if (data[i].in_msg_comment && data[i].in_msg_comment.substr(0, 4) == "px8:") {
+      var content = decodetype2(data[i].in_msg_comment);
+      if (content.types.join(",").substr(0, 5) == "2,0,0" && content.pixels.length == (content.size[0] + 1) * (content.size[1] + 1)) {
+        list.innerHTML += `<img src="${utils.makebmp(content.size[0]+1,content.size[1]+1,content.pixels)}">`;
+      }
+    }
+  }
+}
+
+window.onload = () => {
+  page(0);
+}
+
+send.onclick = async () => {
+  var data = utils.encode8([scale-1,scale-1])+utils.encode(pixels,5);
+  var datalz = LZString.compress(data);
+  var lz = data.length>datalz.length?1:0;
+  //0: px8,1: xyt,2: pix
+  //sign + en8(type,type,type,lz) + wh + data
+  var str = "px8:";
+  str += utils.encode8([2,0,0,lz]);
+  str += lz?datalz:data;
+  var cell = new TonWeb.boc.Cell();
+  cell.bits.writeUint(0,32);
+  cell = utils.strcell16(str,cell);
+  var payload = TonWeb.utils.bytesToBase64(await cell.toBoc());
+  const transaction = {
+    validUntil: Math.floor(new Date() / 1000) + 360,
+    messages: [
+      {
+        address: "0:15a462b23052af05a5beb251016390b1edea580c301e7cc4caa11414f4d819fe",
+        amount: "5000000",
+        payload: payload
+      }
+    ]
+  }
+  await tonConnectUI.sendTransaction(transaction);
+}
+
+const fullscreen = () => {
+  var div = document.documentElement;
+  if (!document.mozFullScreen && !document.webkitFullScreen) {
+    if (div.mozRequestFullScreen) {   
+      div.mozRequestFullScreen();
+    } else {
+      div.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  } else {
+    if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else {
+      document.webkitCancelFullScreen();
+    }
+  }
+}
+
+</script>
+</html>
