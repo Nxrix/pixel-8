@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <base href="../assets/">
+  <base href="./assets/">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/beta.css">
@@ -162,7 +162,6 @@ const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
   manifestUrl: "https://raw.githubusercontent.com/ton-connect/demo-dapp/master/public/tonconnect-manifest.json",
   buttonRootId: "ton-connect"
 });
-
 
 const getlist = async (n) => {
   var json = await fetch("https://dton.io/graphql", {
