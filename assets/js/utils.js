@@ -48,7 +48,7 @@ utils.decode = (str, bitLength) => {
   return result;
 }
 
-utils.bitl = (str) => {
+utils.bitstrlength = (str) => {
   return str.split("").map(char => char.charCodeAt(0).toString(2)).join().length;
 }
 
@@ -71,22 +71,31 @@ utils.decode8 = (str) => {
   return result;
 }
 
-/*utils.p8en = (sign,t1,t2,t3,data,b) => {
-  var str = sign;
-  var datalz = LZString.compress(data);
-  var lz = data.length>datalz.length?1:0;
-  str += utils.encode8([t1,t2,t3,lz]);
-  str += lz?datalz:data;
-  return str
+utils.strcell8 = (cell,str) => {
+  const bytes = Math.floor(cell.bits.getFreeBits() / 8);
+  if(bytes < str.length) {
+    cell.bits.writeString(str.substring(0, bytes));
+    const newCell = utils.strcell8(new TonWeb.boc.Cell(),str.substring(bytes));
+    cell.refs.push(newCell);
+  } else {
+    cell.bits.writeString(str);
+  }
+  return cell;
 }
 
-utils.p8de = (str) => {
-  return {
-    sign: str.substr(0,4),
-    types: utils.decode8(str.substr(4).substr(0,2)),
-    data: str.substr(4).substr(2)
+utils.strcell16 = (cell,str) => {
+  const bytes = Math.floor(cell.bits.getFreeBits() / 16);
+  const chars = Math.floor(bytes / 2);
+  if(chars < str.length) {
+    const substring = str.substring(0, chars);
+    cell.bits.writeString(substring);
+    const newCell = utils.strcell16(new TonWeb.boc.Cell(),str.substring(chars));
+    cell.refs.push(newCell);
+  } else {
+    cell.bits.writeString(str);
   }
-}*/
+  return cell;
+}
 
 utils.copy = (text) => {
   if (!navigator.clipboard) {
@@ -113,32 +122,6 @@ utils.copy = (text) => {
   }, function(err) {
     console.error("Async: Could not copy text: ", err);
   });
-}
-
-utils.strcell8 = (str, cell) => {
-  const bytes = Math.floor(cell.bits.getFreeBits() / 8);
-  if(bytes < str.length) {
-    cell.bits.writeString(str.substring(0, bytes));
-    const newCell = utils.strcell8(str.substring(bytes), new TonWeb.boc.Cell());
-    cell.refs.push(newCell);
-  } else {
-    cell.bits.writeString(str);
-  }
-  return cell;
-}
-
-utils.strcell16 = (str, cell) => {
-  const bytes = Math.floor(cell.bits.getFreeBits() / 16);
-  const chars = Math.floor(bytes / 2);
-  if(chars < str.length) {
-    const substring = str.substring(0, chars);
-    cell.bits.writeString(substring);
-    const newCell = utils.strcell16(str.substring(chars), new TonWeb.boc.Cell());
-    cell.refs.push(newCell);
-  } else {
-    cell.bits.writeString(str);
-  }
-  return cell;
 }
 
 utils.makebmp = (width, height, colors) => {
