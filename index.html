@@ -188,16 +188,24 @@ const getlist = async (n) => {
 }
 
 const decodetype2 = (str) => {
-  var sign = str.substr(0,4);
-  var types = utils.decode8(str.substr(4).substr(0,2));
-  var data = str.substr(4).substr(2);
-  data = types[3]==1?LZString.decompress(data):data;
-  var pixels = utils.decode(data.substr(1),5);
-  var size = utils.decode8(data.substr(0,1))
-  return {
-    types: types,
-    pixels: pixels,
-    size: size
+  try {
+    var sign = str.substr(0,4);
+    var types = utils.decode8(str.substr(4).substr(0,2));
+    var data = str.substr(4).substr(2);
+    data = types[3]==1?LZString.decompress(data):data;
+    var pixels = utils.decode(data.substr(1),5);
+    var size = utils.decode8(data.substr(0,1))
+    return {
+      types: types,
+      pixels: pixels,
+      size: size
+    }
+  } catch (error) {
+    return {
+      types: [0,0,0,0],
+      pixels: [0],
+      size: 0
+    }
   }
 }
 
@@ -233,7 +241,7 @@ send.onclick = async () => {
   str += lz?datalz:data;
   var cell = new TonWeb.boc.Cell();
   cell.bits.writeUint(0,32);
-  cell = utils.strcell16(str,cell);
+  cell = utils.strcell16(cell,str);
   var payload = TonWeb.utils.bytesToBase64(await cell.toBoc());
   const transaction = {
     validUntil: Math.floor(new Date() / 1000) + 360,
