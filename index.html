@@ -194,13 +194,14 @@ const decodetype2 = (str) => {
     var data = str.substr(4).substr(2);
     data = types[3]==1?LZString.decompress(data):data;
     var pixels = utils.decode(data.substr(1),5);
-    var size = utils.decode8(data.substr(0,1))
+    var size = utils.decode8(data.substr(0,1));
     return {
       types: types,
       pixels: pixels,
       size: size
     }
   } catch (error) {
+    console.log(error.toString());
     return {
       types: [0,0,0,0],
       pixels: [0],
