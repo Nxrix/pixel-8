@@ -84,7 +84,7 @@ utils.strcell8 = (cell,str) => {
 }
 
 utils.strcell16 = (cell,str) => {
-  const bytes = Math.floor(cell.bits.getFreeBits() / 16);
+  const bytes = Math.floor(cell.bits.getFreeBits() / 8);
   const chars = Math.floor(bytes / 2);
   if(chars < str.length) {
     const substring = str.substring(0, chars);
