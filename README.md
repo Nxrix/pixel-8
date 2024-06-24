@@ -1,2 +1,4 @@
 # Pixel-8
-Tiny Fantasy Console and JavaScript library for making tiny games or art that uses WebGL.
+A fully blockchain( TON ) based fantasy video game console and JavaScript library for sharing and using different type of data and programs on chain.
+
+It has specific formats for different file types + inbuilt editor and browser to use with the mini app allowing designers, artists and developers to use them directly or implement it in their Dapp for further use.
