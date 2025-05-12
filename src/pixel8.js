@@ -63,7 +63,7 @@ class Pixel8 {
       const ptrn = this.pattern>>((~x&3)+((~y&3)<<2))&1;
       c = ptrn ? this.pattern_color : c;
       if ((c > 0 || !ptrn) && !this.palette_mask[c]) {
-        this.buffer[x + y * this.width] = c & 31;
+        this.buffer[x+y*this.width] = c&31;
       }
     }
   }
@@ -330,7 +330,7 @@ class Pixel8 {
         const cx = x+i*4;
         for (let j=0;j<5;j++) {
           for (let k=0;k<4;k++) {
-            if (font_buffer[(code-32)*4+j*380+k]==1) {
+            if (Pixel8.font_buffer[(code-32)*4+j*380+k]==1) {
               this._pset(cx+k,cy+j,c);
             }
           }
