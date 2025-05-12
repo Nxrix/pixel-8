@@ -37,14 +37,14 @@ class Pixel8 {
     [63, 31, 55, 23, 61, 29, 53, 21]
   ];
 
-  constructor(width,height) {
-    this.width = width;
-    this.height = height;
-    this.width2 = width/2;
-    this.height2 = height/2;
-    this.width1 = width-1;
-    this.height1 = height-1;
-    this.buffer = new Uint8Array(width*height);
+  constructor(w,h) {
+    this.w = w;
+    this.h = h;
+    this.w2 = w/2;
+    this.h2 = h/2;
+    this.w1 = w-1;
+    this.h1 = h-1;
+    this.buffer = new Uint8Array(w*h);
     this.palette_mask = new Uint8Array(32);
     this.pattern = 0;
     this.pattern_color = 0;
@@ -52,8 +52,8 @@ class Pixel8 {
     this.camera_y = 0;
     this.clip_x0 = 0;
     this.clip_y0 = 0;
-    this.clip_x1 = width;
-    this.clip_y1 = height;
+    this.clip_x1 = w;
+    this.clip_y1 = h;
   }
 
   _pset(x,y,c) {
@@ -63,7 +63,7 @@ class Pixel8 {
       const ptrn = this.pattern>>((~x&3)+((~y&3)<<2))&1;
       c = ptrn ? this.pattern_color : c;
       if ((c > 0 || !ptrn) && !this.palette_mask[c]) {
-        this.buffer[x+y*this.width] = c&31;
+        this.buffer[x+y*this.w] = c&31;
       }
     }
   }
@@ -80,7 +80,7 @@ class Pixel8 {
   }
 
   pget(x,y) {
-    return this.buffer[(x&this.width1)+(y&this.height1)*this.width];
+    return this.buffer[(x&this.w1)+(y&this.h1)*this.w];
   }
 
   fillp(p,c) {
@@ -105,8 +105,8 @@ class Pixel8 {
   clip(x0,y0,x1,y1) {
     this.clip_x0 = Math.round(x0||0);
     this.clip_y0 = Math.round(y0||0);
-    this.clip_x1 = Math.round(x1||this.width);
-    this.clip_y1 = Math.round(y1||this.height);
+    this.clip_x1 = Math.round(x1||this.w);
+    this.clip_y1 = Math.round(y1||this.h);
   }
 
   line(x0,y0,x1,y1,c) {
@@ -150,8 +150,8 @@ class Pixel8 {
       this._pset(x,y1,c);
     }
     for (let y=y0;y<=y1;y++) {
-      px8_pset(x0,y,c);
-      px8_pset(x1,y,c);
+      this._pset(x0,y,c);
+      this._pset(x1,y,c);
     }
   }
   
@@ -212,6 +212,7 @@ class Pixel8 {
     x = Math.round(x);
     y = Math.round(y);
     r = Math.round(r);
+    c = Math.round(c);
     let  f = 1-r;
     let dx = 1;
     let dy = -2*r;
@@ -219,7 +220,7 @@ class Pixel8 {
     let cy = r;
     const hline = (x1,x2,y) => {
       for (let i=x1;i<=x2;i++) {
-        px8_pset(i,y,col);
+        this._pset(i,y,c);
       }
     };
     while (cx<=cy) {
