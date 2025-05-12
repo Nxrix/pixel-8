@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+<script src="https://nxrix.github.io/pixel-8/src/pixel8.js"></script>
+<script>
+const PCG32 = (s) => {
+  return () => {
+    const x = Number(((s>>18n)^s)>>27n)>>>0;
+    const r = Number(s>>59n);
+    s = (s*6364136223846793005n+1442695040888963407n)&18446744073709551615n;
+    return ((x>>>r)|(x<<((32-r)&31)))>>>0;
+  };
+}
+const rnd = PCG32(1234n);
+const px8 = new Pixel8(550,550);
+canvas.width = px8.w;
+canvas.height = px8.h;
+const ctx = canvas.getContext("2d");
+const img = ctx.createImageData(px8.w,px8.h);
+const img_data = img.data;
+
+let t = 0;
+u = () => {
+  px8.cls();
+  s = 16;
+  for (i=0;i<32;i++) {
+    for (j=0;j<32;j++) {
+      p = rnd()&0xffff;
+      px8.fillp(p,j);
+      px8.rectfill(i*(s+1),j*(s+1),i*(s+1)+s-1,j*(s+1)+s-1,i);
+      px8.fillp();
+    }
+  }
+  for (let i = 0; i < px8.w*px8.h; i++) {
+    const c = Pixel8.palette[px8.buffer[i]];
+    const index = i * 4;
+    img_data[index    ] = c[0];
+    img_data[index + 1] = c[1];
+    img_data[index + 2] = c[2];
+    img_data[index + 3] = 255;
+  }
+  ctx.putImageData(img,0,0);
+  t++;
+  requestAnimationFrame(u);
+}
+u();
+</script>
+</html>
