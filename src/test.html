@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
 </head>
+<style>
+canvas {
+  image-rendering: pixelated;
+}
+</style>
 <body>
 <canvas id="canvas"></canvas>
 </body>
@@ -18,8 +23,7 @@ const PCG32 = (s) => {
     return ((x>>>r)|(x<<((32-r)&31)))>>>0;
   };
 }
-const rnd = PCG32(1234n);
-const px8 = new Pixel8(550,550);
+const px8 = new Pixel8(300,300);
 canvas.width = px8.w;
 canvas.height = px8.h;
 const ctx = canvas.getContext("2d");
@@ -27,9 +31,20 @@ const img = ctx.createImageData(px8.w,px8.h);
 const img_data = img.data;
 
 let t = 0;
-u = () => {
-  px8.cls();
-  s = 16;
+let lastTime = 0;
+let fps = 0;
+
+s = 8;
+
+let min = 60;
+
+u = (tm) => {
+  const rnd = PCG32(1234n);
+  const dt = tm - lastTime;
+  if (dt==0) console.log(Math.min(fps));
+  fps = 1000/dt;
+  lastTime = tm;
+  px8.cls(0);
   for (i=0;i<32;i++) {
     for (j=0;j<32;j++) {
       p = rnd()&0xffff;
@@ -38,18 +53,19 @@ u = () => {
       px8.fillp();
     }
   }
-  for (let i = 0; i < px8.w*px8.h; i++) {
+  px8.print(fps.toFixed(1),1,1,3);
+  for (let i=0;i<px8.w*px8.h;i++) {
     const c = Pixel8.palette[px8.buffer[i]];
     const index = i * 4;
-    img_data[index    ] = c[0];
+    img_data[index] = c[0];
     img_data[index + 1] = c[1];
     img_data[index + 2] = c[2];
     img_data[index + 3] = 255;
   }
-  ctx.putImageData(img,0,0);
+  ctx.putImageData(img, 0, 0);
   t++;
   requestAnimationFrame(u);
-}
+};
 u();
 </script>
 </html>
