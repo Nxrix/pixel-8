@@ -62,7 +62,7 @@ class Pixel8 {
     if (x >= this.clip_x0 && x < this.clip_x1 && y >= this.clip_y0 && y < this.clip_y1) {
       const ptrn = this.pattern>>((~x&3)+((~y&3)<<2))&1;
       c = ptrn ? this.pattern_color : c;
-      if ((c > 0 || !ptrn) && !this.palette_mask[c]) {
+      if ((c > 0 || !ptrn) && !this.palette_mask[c&31]) {
         this.buffer[x+y*this.w] = c&31;
       }
     }
@@ -76,7 +76,7 @@ class Pixel8 {
   }
 
   pset(x,y,c) {
-    this._pset(Math.round(x),Math.round(y),Math.round(c));
+    this._pset(x|0,y|0,c|0);
   }
 
   pget(x,y) {
@@ -84,37 +84,35 @@ class Pixel8 {
   }
 
   fillp(p,c) {
-    this.pattern = Math.round(p||0)&0xffff;
-    this.pattern_color = Math.round(c||0)&31;
+    this.pattern = p&0xffff;
+    this.pattern_color = c|0;//c&31;
   }
 
   palt(c,t) {
-    c = Math.round(c||0);
     if (c) {
-      this.palette_mask[c&31] = t||0;
+      this.palette_mask[c&31] = t|0;
     } else {
       this.palette_mask.fill(false);
     }
   }
 
   camera(x,y) {
-    this.camera_x = Math.round(x||0);
-    this.camera_y = Math.round(y||0);
+    this.camera_x = x|0;
+    this.camera_y = y|0;
   }
 
   clip(x0,y0,x1,y1) {
-    this.clip_x0 = Math.round(x0||0);
-    this.clip_y0 = Math.round(y0||0);
-    this.clip_x1 = Math.round(x1||this.w);
-    this.clip_y1 = Math.round(y1||this.h);
+    this.clip_x0 = x0|0;
+    this.clip_y0 = y0|0;
+    this.clip_x1 = (x1||this.w)|0;
+    this.clip_y1 = (y1||this.h)|0;
   }
 
   line(x0,y0,x1,y1,c) {
-    x0 = Math.round(x0);
-    y0 = Math.round(y0);
-    x1 = Math.round(x1);
-    y1 = Math.round(y1);
-    c = Math.round(c);
+    x0 |= 0;
+    y0 |= 0;
+    x1 |= 0;
+    y1 |= 0;
     const dx = Math.abs(x1-x0);
     const dy = Math.abs(y1-y0);
     const sx = (x0<x1)?1:-1;
@@ -130,17 +128,16 @@ class Pixel8 {
   }
   
   rect(x0,y0,x1,y1,c) {
-    x0 = Math.round(x0);
-    y0 = Math.round(y0);
-    x1 = Math.round(x1);
-    y1 = Math.round(y1);
-    c = Math.round(c);
-    if (x0>x1) {
+    x0 |= 0;
+    y0 |= 0;
+    x1 |= 0;
+    y1 |= 0;
+    if (x0 > x1) {
       const temp = x0;
       x0 = x1;
       x1 = temp;
     }
-    if (y0>y1) {
+    if (y0 > y1) {
       const temp = y0;
       y0 = y1;
       y1 = temp;
@@ -149,18 +146,17 @@ class Pixel8 {
       this._pset(x,y0,c);
       this._pset(x,y1,c);
     }
-    for (let y=y0;y<=y1;y++) {
+    for (let y=y0+1;y<y1;y++) {
       this._pset(x0,y,c);
       this._pset(x1,y,c);
     }
   }
   
   rectfill(x0,y0,x1,y1,c) {
-    x0 = Math.round(x0);
-    y0 = Math.round(y0);
-    x1 = Math.round(x1);
-    y1 = Math.round(y1);
-    c = Math.round(c);
+    x0 |= 0;
+    y0 |= 0;
+    x1 |= 0;
+    y1 |= 0;
     if (x0 > x1) {
       const temp = x0;
       x0 = x1;
@@ -179,10 +175,9 @@ class Pixel8 {
   }
   
   circ(x,y,r,c) {
-    x = Math.round(x);
-    y = Math.round(y);
-    r = Math.round(r);
-    c = Math.round(c);
+    x |= 0;
+    y |= 0;
+    r |= 0;
     let  f = 1-r;
     let dx = 1;
     let dy = -2*r;
@@ -209,10 +204,9 @@ class Pixel8 {
   }
   
   circfill(x,y,r,c) {
-    x = Math.round(x);
-    y = Math.round(y);
-    r = Math.round(r);
-    c = Math.round(c);
+    x |= 0;
+    y |= 0;
+    r |= 0;
     let  f = 1-r;
     let dx = 1;
     let dy = -2*r;
@@ -246,13 +240,12 @@ class Pixel8 {
   }
   
   trifill(x0,y0,x1,y1,x2,y2,c) {
-    x0 = Math.round(x0);
-    y0 = Math.round(y0);
-    x1 = Math.round(x1);
-    y1 = Math.round(y1);
-    x2 = Math.round(x2);
-    y2 = Math.round(y2);
-    c = Math.round(c);
+    x0 |= 0;
+    y0 |= 0;
+    x1 |= 0;
+    y1 |= 0;
+    x2 |= 0;
+    y2 |= 0;
     if (y0>y1) {
       let temp = y0;
       y0 = y1;
@@ -303,8 +296,8 @@ class Pixel8 {
   }
   
   sspr(spr,x,y,w,h) {
-    x = Math.round(x);
-    y = Math.round(y);
+    x |= 0;
+    y |= 0;
     const [w1,h1,d] = spr.split(",");
     spr = d.split("");
     for (let i=0;i<w;i++) {
@@ -318,9 +311,8 @@ class Pixel8 {
   }
 
   print(t,x,y,c) {
-    x = Math.round(x);
-    y = Math.round(y);
-    c = Math.round(c);
+    x |= 0;
+    y |= 0;
     t = t.toString();
     const lines = t.split("\n");
     for (let l=0;l<lines.length;l++) {
