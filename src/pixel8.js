@@ -102,6 +102,16 @@ class Pixel8 {
   }
 
   clip(x0,y0,x1,y1) {
+    if (x0 > x1) {
+      const temp = x0;
+      x0 = x1;
+      x1 = temp;
+    }
+    if (y0 > y1) {
+      const temp = y0;
+      y0 = y1;
+      y1 = temp;
+    }
     this.clip_x0 = x0|0;
     this.clip_y0 = y0|0;
     this.clip_x1 = (x1||this.w)|0;
