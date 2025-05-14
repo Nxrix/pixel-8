@@ -90,9 +90,9 @@ class Pixel8 {
 
   palt(c,t) {
     if (c) {
-      this.palette_mask[c&31] = t|0;
+      this.palette_mask[c&31] = t&1;
     } else {
-      this.palette_mask.fill(false);
+      this.palette_mask.fill(0);
     }
   }
 
