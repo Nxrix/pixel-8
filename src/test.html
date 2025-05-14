@@ -31,19 +31,20 @@ const img = ctx.createImageData(px8.w,px8.h);
 const img_data = img.data;
 
 let t = 0;
-let lastTime = 0;
+let t0 = 0;
 let fps = 0;
 
-s = 8;
+const s = 8;
 
-let min = 60;
-
-u = (tm) => {
-  const rnd = PCG32(1234n);
-  const dt = tm - lastTime;
-  if (dt==0) console.log(Math.min(fps));
-  fps = 1000/dt;
-  lastTime = tm;
+let u = (time) => {
+  const rnd = PCG32(0n);
+  const dt = time - t0;
+  if (1000/dt<100) {
+    fps = (fps*t+1000/dt)/(t+1);
+  } else {
+    fps = (fps*t+fps)/(t+1);
+  }
+  t0 = time;
   px8.cls(0);
   for (i=0;i<32;i++) {
     for (j=0;j<32;j++) {
@@ -54,6 +55,7 @@ u = (tm) => {
     }
   }
   px8.print(fps.toFixed(1),1,1,3);
+  
   for (let i=0;i<px8.w*px8.h;i++) {
     const c = Pixel8.palette[px8.buffer[i]];
     const index = i * 4;
