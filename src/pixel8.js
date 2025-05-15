@@ -262,10 +262,68 @@ class Pixel8 {
     }
   }
   
-  tri(x0,y0,x1,y1,x2,y2,c) {
-    this.line(x0,y0,x1,y1,c);
-    this.line(x1,y1,x2,y2,c);
-    this.line(x2,y2,x0,y0,c);
+  rrect(x0,y0,x1,y1,r,c) {
+    r |= 0;
+    if (r<=0) {
+      this.rect(x0,y0,x1,y1,c);
+    } else {
+      x0 |= 0;
+      y0 |= 0;
+      x1 |= 0;
+      y1 |= 0;
+      if (x0 > x1) {
+        const temp = x0;
+        x0 = x1;
+        x1 = temp;
+      }
+      if (y0 > y1) {
+        const temp = y0;
+        y0 = y1;
+        y1 = temp;
+      }
+      x0 += r;
+      y0 += r;
+      x1 -= r;
+      y1 -= r;
+      const maxr = Math.min((x1-x0)>>1,(y1-y0)>>1);
+      if (r>maxr) r = maxr;
+      r++;
+      for (let x=x0+1;x<=x1-1;x++) {
+        this._pset(x,y0-r,c);
+        this._pset(x,y1+r,c);
+      }
+      for (let y=y0+2;y<=y1-1;y++) {
+        this._pset(x0-r,y,c);
+        this._pset(x1+r,y,c);
+      }
+      let cy = r;
+      let cx = 0;
+      let d = 1-cy;
+      while (cx<=cy) {
+        if (cx==cy) {
+          this._pset(x1+cx,y1+cy,c);
+          this._pset(x0-cx,y1+cy,c);
+          this._pset(x1+cx,y0-cy,c);
+          this._pset(x0-cx,y0-cy,c);
+        } else {
+          this._pset(x1+cx,y1+cy,c);
+          this._pset(x0-cx,y1+cy,c);
+          this._pset(x1+cx,y0-cy,c);
+          this._pset(x0-cx,y0-cy,c);
+          this._pset(x1+cy,y1+cx,c);
+          this._pset(x0-cy,y1+cx,c);
+          this._pset(x1+cy,y0-cx,c);
+          this._pset(x0-cy,y0-cx,c);
+        }
+        cx++;
+        if (d < 0) {
+          d += 2*cx+1;
+        } else {
+          cy--;
+          d += 2*(cx-cy)+1;
+        }
+      }
+    }
   }
   
   trifill(x0,y0,x1,y1,x2,y2,c) {
