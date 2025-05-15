@@ -102,6 +102,10 @@ class Pixel8 {
   }
 
   clip(x0,y0,x1,y1) {
+    x0 |= 0;
+    y0 |= 0;
+    x1 |= 0;
+    y1 |= 0;
     if (x0 > x1) {
       const temp = x0;
       x0 = x1;
@@ -112,10 +116,10 @@ class Pixel8 {
       y0 = y1;
       y1 = temp;
     }
-    this.clip_x0 = x0|0;
-    this.clip_y0 = y0|0;
-    this.clip_x1 = (x1||this.w)|0;
-    this.clip_y1 = (y1||this.h)|0;
+    this.clip_x0 = x0;
+    this.clip_y0 = y0;
+    this.clip_x1 = x1||this.w;
+    this.clip_y1 = y1||this.h;
   }
 
   line(x0,y0,x1,y1,c) {
@@ -188,28 +192,43 @@ class Pixel8 {
     x |= 0;
     y |= 0;
     r |= 0;
-    let  f = 1-r;
-    let dx = 1;
-    let dy = -2*r;
-    let cx = 0;
-    let cy = r;
-    while (cx<=cy) {
-      this._pset(x+cx,y+cy,c);
-      this._pset(x-cx,y+cy,c);
-      this._pset(x+cx,y-cy,c);
-      this._pset(x-cx,y-cy,c);
-      this._pset(x+cy,y+cx,c);
-      this._pset(x-cy,y+cx,c);
-      this._pset(x+cy,y-cx,c);
-      this._pset(x-cy,y-cx,c);
-      if (f>=0) {
-        cy--;
-        dy +=  2;
-         f += dy;
+    if (r>1) {
+      let cy = r;
+      let cx = 0;
+      let d = 1-cy;
+      while (cx <= cy) {
+        if (cx == 0) {
+          this._pset(x   ,y+cy,c);
+          this._pset(x   ,y-cy,c);
+          this._pset(x+cy,y   ,c);
+          this._pset(x-cy,y   ,c);
+        }
+        else if (cx == cy) {
+          this._pset(x+cx,y+cy,c);
+          this._pset(x-cx,y+cy,c);
+          this._pset(x+cx,y-cy,c);
+          this._pset(x-cx,y-cy,c);
+        }
+        else {
+          this._pset(x+cx,y+cy,c);
+          this._pset(x-cx,y+cy,c);
+          this._pset(x+cx,y-cy,c);
+          this._pset(x-cx,y-cy,c);
+          this._pset(x+cy,y+cx,c);
+          this._pset(x-cy,y+cx,c);
+          this._pset(x+cy,y-cx,c);
+          this._pset(x-cy,y-cx,c);
+        }
+        cx++;
+        if (d < 0) {
+          d += 2*cx+1;
+        } else {
+          cy--;
+          d += 2*(cx-cy)+1;
+        }
       }
-      cx++;
-      dx +=  2;
-       f += dx;
+    } else if (r==1) {
+      this._pset(x,y,c);
     }
   }
   
