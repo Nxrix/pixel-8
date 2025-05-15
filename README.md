@@ -46,30 +46,30 @@ update();
 
 The drawing API is pretty similar to Pico8
 
-`cls(c)`: Fills the buffer with color `c`.
+`cls(c)`: Fills the buffer with color `c`
 
-`pset(x,y,c)`: Set color of pixel `[x,y]` to `c`.
+`pset(x,y,c)`: Set color of pixel `[x,y]` to `c`
 
-`pget(x,y)`: Get color of pixel `[x,y]`.
+`pget(x,y)`: Get color of pixel `[x,y]`
 
-`camera(x,y)`: Move camera to `[x,y]`. Can be reset using `camera()`.
+`camera(x,y)`: Move camera to `[x,y]`. Can be reset using `camera()`
 
-`clip(x0,y0,x1,y1)`: Clip drawing to `[x0,y0]` & `[x1,y1]`. Can be reset using `clip()`.
+`clip(x0,y0,x1,y1)`: Clip drawing to `[x0,y0]` & `[x1,y1]`. Can be reset using `clip()`
 
-`fillp(p,c)`: Set a pattern applied to all drawing functions. `p` is a number with 16 bits and each 4x4 area gets the same pattern. `c` is the pattern's base color. If `c` was 0, the pattern color will be transparent (use 32 for black). Pattern can be reset using `fillp()`.
+`fillp(p,c)`: Set a pattern applied to all drawing functions. `p` is a number with 16 bits and each 4x4 area gets the same pattern. `c` is the pattern's base color. If `c` was 0, the pattern color will be transparent (use 32 for black). Pattern can be reset using `fillp()`
 
-`palt(c,t)`: Set color `c` to be transparent or not. Can be reset using `palt()`.
+`palt(c,t)`: Set color `c` to be transparent or not. Can be reset using `palt()`
 
-`line(x0,y0,x1,y1,c)`: Draw a line from `[x0,y0]` to `[x1,y1]` with color `c`.
+`line(x0,y0,x1,y1,c)`: Draw a line from `[x0,y0]` to `[x1,y1]` with color `c`
 
-`rect(x0,y0,x1,y1,c)`: Draw a rectangle from `[x0,y0]` to `[x1,y1]` with color `c`.
+`rect(x0,y0,x1,y1,c)`: Draw a rectangle from `[x0,y0]` to `[x1,y1]` with color `c`
 
-`rectfill(x0,y0,x1,y1,c)`: Draw a filled rectangle from `[x0,y0]` to `[x1,y1]` with color `c`.
+`rectfill(x0,y0,x1,y1,c)`: Draw a filled rectangle from `[x0,y0]` to `[x1,y1]` with color `c`
 
-`circ(x,y,r,c)`: Draw a circle with radius `r` at `[x,y]` with color `c`.
+`circ(x,y,r,c)`: Draw a circle with radius `r` at `[x,y]` with color `c`
 
-`circfill(x,y,r,c)`: Draw a filled circle with radius `r` at `[x,y]` with color `c`.
+`circfill(x,y,r,c)`: Draw a filled circle with radius `r` at `[x,y]` with color `c`
 
-`sspr(s,x,y,w,h)`: Draw sprite `s` at `[x,y]` with width `w` and height `h`. The sprite should be exported using [PNG to sprite tool](./).
+`sspr(s,x,y,w,h)`: Draw sprite `s` at `[x,y]` with width `w` and height `h`. The sprite should be exported using [PNG to sprite tool](./)
 
-`print(t,x,y,c)`: Print string `t` at `[x,y]` with color `c`.
+`print(t,x,y,c)`: Print string `t` at `[x,y]` with color `c`
