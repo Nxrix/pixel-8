@@ -193,17 +193,17 @@ class Pixel8 {
     y |= 0;
     r |= 0;
     if (r>1) {
-      let cy = r;
-      let cx = 0;
-      let d = 1-cy;
-      while (cx <= cy) {
-        if (cx == 0) {
-          this._pset(x   ,y+cy,c);
-          this._pset(x   ,y-cy,c);
-          this._pset(x+cy,y   ,c);
-          this._pset(x-cy,y   ,c);
+      let cx = r;
+      let cy = 0;
+      let d = 1-cx;
+      while (cy<=cx) {
+        if (cy==0) {
+          this._pset(x   ,y+cx,c);
+          this._pset(x   ,y-cx,c);
+          this._pset(x+cx,y   ,c);
+          this._pset(x-cx,y   ,c);
         }
-        else if (cx == cy) {
+        else if (cx==cy) {
           this._pset(x+cx,y+cy,c);
           this._pset(x-cx,y+cy,c);
           this._pset(x+cx,y-cy,c);
@@ -219,12 +219,12 @@ class Pixel8 {
           this._pset(x+cy,y-cx,c);
           this._pset(x-cy,y-cx,c);
         }
-        cx++;
+        cy++;
         if (d < 0) {
-          d += 2*cx+1;
+          d += 2*cy+1;
         } else {
-          cy--;
-          d += 2*(cx-cy)+1;
+          cx--;
+          d += 2*(cy-cx)+1;
         }
       }
     } else if (r==1) {
@@ -241,7 +241,7 @@ class Pixel8 {
     let err = 1-r;
     const hline = (x1,x2,y) => {
       for (let i=x1;i<=x2;i++) {
-        px8._pset(i,y,c);
+        this._pset(i,y,c);
       }
     };
     while (cy<=cx) {
