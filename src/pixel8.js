@@ -116,10 +116,10 @@ class Pixel8 {
       y0 = y1;
       y1 = temp;
     }
-    this.clip_x0 = x0;
-    this.clip_y0 = y0;
-    this.clip_x1 = x1||this.w;
-    this.clip_y1 = y1||this.h;
+    this.clip_x0 = Math.max(x0,0);
+    this.clip_y0 = Math.max(y0,0);
+    this.clip_x1 = Math.min(x1||this.w,this.w);
+    this.clip_y1 = Math.min(y1||this.h,this.h);
   }
 
   line(x0,y0,x1,y1,c) {
