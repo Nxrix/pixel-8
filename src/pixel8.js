@@ -248,7 +248,7 @@ class Pixel8 {
       hline(x-cx,x+cx,y+cy);
       if (cy!=0) hline(x-cx,x+cx,y-cy);
       if (err < 0) {
-        err += 2*dy+3;
+        err += 2*cy+3;
       } else {
         if (cx!=cy) {
           hline(x-cy,x+cy,y+cx);
