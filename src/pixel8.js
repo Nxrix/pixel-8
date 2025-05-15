@@ -292,7 +292,7 @@ class Pixel8 {
         this._pset(x,y0-r,c);
         this._pset(x,y1+r,c);
       }
-      for (let y=y0+2;y<=y1-1;y++) {
+      for (let y=y0+1;y<=y1-1;y++) {
         this._pset(x0-r,y,c);
         this._pset(x1+r,y,c);
       }
