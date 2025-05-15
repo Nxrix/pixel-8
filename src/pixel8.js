@@ -236,29 +236,28 @@ class Pixel8 {
     x |= 0;
     y |= 0;
     r |= 0;
-    let  f = 1-r;
-    let dx = 1;
-    let dy = -2*r;
-    let cx = 0;
-    let cy = r;
+    let cx = r;
+    let cy = 0;
+    let err = 1-r;
     const hline = (x1,x2,y) => {
       for (let i=x1;i<=x2;i++) {
-        this._pset(i,y,c);
+        px8._pset(i,y,c);
       }
     };
-    while (cx<=cy) {
+    while (cy<=cx) {
       hline(x-cx,x+cx,y+cy);
-      hline(x-cx,x+cx,y-cy);
-      hline(x-cy,x+cy,y+cx);
-      hline(x-cy,x+cy,y-cx);
-      if (f >= 0) {
-        cy--;
-        dy += 2;
-        f += dy;
+      if (cy!=0) hline(x-cx,x+cx,y-cy);
+      if (err < 0) {
+        err += 2*dy+3;
+      } else {
+        if (cx!=cy) {
+          hline(x-cy,x+cy,y+cx);
+          hline(x-cy,x+cy,y-cx);
+        }
+        cx--;
+        err += 2*(cy-cx)+3;
       }
-      cx++;
-      dx += 2;
-      f += dx;
+      cy++;
     }
   }
   
