@@ -281,13 +281,13 @@ class Pixel8 {
         y0 = y1;
         y1 = temp;
       }
+      r++;
+      const maxr = Math.min((x1-x0)>>1,(y1-y0)>>1);
+      if (r>maxr) r = maxr;
       x0 += r;
       y0 += r;
       x1 -= r;
       y1 -= r;
-      const maxr = Math.min((x1-x0)>>1,(y1-y0)>>1);
-      if (r>maxr) r = maxr;
-      r++;
       for (let x=x0+1;x<=x1-1;x++) {
         this._pset(x,y0-r,c);
         this._pset(x,y1+r,c);
