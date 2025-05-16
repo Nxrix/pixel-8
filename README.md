@@ -41,6 +41,7 @@ const update = () => {
 };
 update();
 ```
+To remove the blurry effect of canvas add `image-rendering: pixelated;` CSS property to it.
 
 ## API
 
