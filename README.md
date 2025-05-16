@@ -1,4 +1,4 @@
-![Pixel-8](./icon.png)
+<img src="./icon.png" alt="Pixel-8" style="width:205px">
 
 A web based fantasy console and JavaScript library for creating small things.
 
