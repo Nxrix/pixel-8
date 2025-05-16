@@ -1,4 +1,4 @@
-# Pixel-8
+![Pixel-8](./icon.png)
 
 A web based fantasy console and JavaScript library for creating small things.
 
