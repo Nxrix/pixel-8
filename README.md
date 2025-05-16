@@ -25,7 +25,7 @@ let t = 0;
 const update = () => {
 
   px8.cls();
-  px8.print("Hello",px8.w2-2*5,px8.h2-2,3);
+  px8.print("hello!",px8.w2-2*5,px8.h2-2,3);
   t++;
 
   for (let i = 0; i < px8.w*px8.h; i++) {
