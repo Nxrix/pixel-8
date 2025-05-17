@@ -261,58 +261,48 @@ class Pixel8 {
     }
   }
   
-  rrect(x0,y0,x1,y1,r,c) {
+  rrect(x,y,w,h,r,c) {
+    x |= 0;
+    y |= 0;
+    w = x+(w|0)-1;
+    h = y+(h|0)-1;
     r |= 0;
     if (r<=0) {
-      this.rect(x0,y0,x1,y1,c);
+      this.rect(x,y,w,h,c);
     } else {
-      x0 |= 0;
-      y0 |= 0;
-      x1 |= 0;
-      y1 |= 0;
-      if (x0 > x1) {
-        const temp = x0;
-        x0 = x1;
-        x1 = temp;
-      }
-      if (y0 > y1) {
-        const temp = y0;
-        y0 = y1;
-        y1 = temp;
-      }
       r++;
-      const maxr = Math.min((x1-x0)>>1,(y1-y0)>>1);
+      const maxr = Math.min((w-x)>>1,(h-y)>>1);
       if (r>maxr) r = maxr;
-      x0 += r;
-      y0 += r;
-      x1 -= r;
-      y1 -= r;
-      for (let x=x0+1;x<=x1-1;x++) {
-        this._pset(x,y0-r,c);
-        this._pset(x,y1+r,c);
+      x += r;
+      y += r;
+      w -= r;
+      h -= r;
+      for (let x=x+1;x<=w-1;x++) {
+        this._pset(x,y-r,c);
+        this._pset(x,h+r,c);
       }
-      for (let y=y0+1;y<=y1-1;y++) {
-        this._pset(x0-r,y,c);
-        this._pset(x1+r,y,c);
+      for (let y=y+1;y<=h-1;y++) {
+        this._pset(x-r,y,c);
+        this._pset(w+r,y,c);
       }
       let cy = r;
       let cx = 0;
       let d = 1-cy;
       while (cx<=cy) {
         if (cx==cy) {
-          this._pset(x1+cx,y1+cy,c);
-          this._pset(x0-cx,y1+cy,c);
-          this._pset(x1+cx,y0-cy,c);
-          this._pset(x0-cx,y0-cy,c);
+          this._pset(w+cx,h+cy,c);
+          this._pset(x-cx,h+cy,c);
+          this._pset(w+cx,y-cy,c);
+          this._pset(x-cx,y-cy,c);
         } else {
-          this._pset(x1+cx,y1+cy,c);
-          this._pset(x0-cx,y1+cy,c);
-          this._pset(x1+cx,y0-cy,c);
-          this._pset(x0-cx,y0-cy,c);
-          this._pset(x1+cy,y1+cx,c);
-          this._pset(x0-cy,y1+cx,c);
-          this._pset(x1+cy,y0-cx,c);
-          this._pset(x0-cy,y0-cx,c);
+          this._pset(w+cx,h+cy,c);
+          this._pset(x-cx,h+cy,c);
+          this._pset(h+cx,y-cy,c);
+          this._pset(x-cx,y-cy,c);
+          this._pset(w+cy,h+cx,c);
+          this._pset(x-cy,h+cx,c);
+          this._pset(w+cy,y-cx,c);
+          this._pset(x-cy,y-cx,c);
         }
         cx++;
         if (d < 0) {
