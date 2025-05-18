@@ -270,9 +270,9 @@ class Pixel8 {
     if (r<=0) {
       this.rect(x,y,w,h,c);
     } else {
-      r++;
       const maxr = Math.min((w-x)>>1,(h-y)>>1);
       if (r>maxr) r = maxr;
+      r++;
       x += r;
       y += r;
       w -= r;
