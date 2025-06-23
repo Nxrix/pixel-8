@@ -56,6 +56,15 @@ class Pixel8 {
     this.clip_y1 = h;
   }
 
+  rng(s=0n) {
+    return () => {
+      s = ((7012135492040785920n|s)*6364136223846793005n+1442695040888963407n)&18446744073709551615n;
+      const x = Number(((s>>18n)^s)>>27n)>>>0;
+      const r = Number(s>>59n);
+      return ((x>>>r)|(x<<((32-r)&31)))>>>0;
+    }
+  }
+
   _pset(x,y,c) {
     x -= this.camera_x;
     y -= this.camera_y;
