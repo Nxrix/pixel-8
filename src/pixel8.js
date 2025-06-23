@@ -236,32 +236,6 @@ class Pixel8 {
     x |= 0;
     y |= 0;
     r |= 0;
-    /*const hline = (cx,cy,x,y,c) => {
-      for (let i=cx-x;i<=cx+x;i++) {
-		    this._pset(i,cy+y,c);
-	    }
-    	if (y!=0) {
-        for (let i=cx-x;i<=cx+x;i++) {
-		      this._pset(i,cy-y,c);
-	      }
-  	  }
-    };
-    let cx = r;
-	  let y = 0;
-  	let e = 1-r;
-	  while (cy<=cx) {
-	  	hline(x,y,cx,cy,c);
-		  if (e<0) {
-			  e += 2*cy+3;
-		  } else {
-			  if (cx!=cy) {
-				  hline(x,y,cy,cx,c);
-			  }
-			  cx--;
-			  e += 2*(cy-cx)+3;
-		  }
-		  cy++;
-	  }*/
     const hline = (x1,x2,y) => {
       for (let i=x1;i<=x2;i++) {
         this._pset(i,y,c);
@@ -297,7 +271,7 @@ class Pixel8 {
       this.rect(x,y,w,h,c);
     } else {
       const maxr = Math.min((w-x)>>1,(h-y)>>1);
-      if (r>maxr) r = maxr-1;
+      if (r>=maxr) r = maxr-1;
       r++;
       x += r;
       y += r;
