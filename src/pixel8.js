@@ -54,14 +54,32 @@ class Pixel8 {
     this.clip_y0 = 0;
     this.clip_x1 = w;
     this.clip_y1 = h;
+    this.rngs = ((BigInt(Date.now())^BigInt(Math.floor(Math.random()*0xFFFFFFFF)))&0xFFFFFFFFn)|7012135492040785920n;
   }
 
   rng(s=0n) {
+    s = s|7012135492040785920n;
     return () => {
-      s = ((7012135492040785920n|s)*6364136223846793005n+1442695040888963407n)&18446744073709551615n;
+      s = (s*6364136223846793005n+1442695040888963407n)&18446744073709551615n;
       const x = Number(((s>>18n)^s)>>27n)>>>0;
       const r = Number(s>>59n);
       return ((x>>>r)|(x<<((32-r)&31)))>>>0;
+    }
+  }
+  
+  srnd(s) {
+    this.rngs = (((s!=undefined&&s!=null)?BigInt(s):BigInt(Date.now())^BigInt(Math.floor(Math.random()*0xFFFFFFFF)))&0xFFFFFFFFn)|7012135492040785920n;
+  }
+
+  rnd(m) {
+    this.rngs = (this.rngs*6364136223846793005n+1442695040888963407n)&18446744073709551615n;
+    const x = Number(((this.rngs>>18n)^this.rngs)>>27n)>>>0;
+    const r = Number(this.rngs>>59n);
+    const o = (((x>>>r)|(x<<((32-r)&31)))>>>0)/0x100000000;
+    if (Array.isArray(m)) {
+      return m[o*m.length|0];
+    } else {
+      return o*(m||1);
     }
   }
 
