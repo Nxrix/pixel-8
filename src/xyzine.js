@@ -73,10 +73,11 @@ class XYZINE {
   }
 
   exp_a_op_b(a,b) {
+    const op = this.get_op();
     if (this.safe && (op === "/" || op === "%")) {
-    return `((${b}!=0)?(${a}${op}${b}):0)`;
+      return `((${b}!=0)?(${a}${op}${b}):0)`;
     }
-    return `(${a}${this.get_op()}${b})`;
+    return `(${a}${op}${b})`;
   }
 
   exp_max(a,b) {
