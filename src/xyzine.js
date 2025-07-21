@@ -635,4 +635,6 @@ class XYZINE {
 
 }
 
-module.exports = XYZINE;
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+  module.exports = XYZINE;
+}
