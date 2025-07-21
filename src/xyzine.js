@@ -635,4 +635,4 @@ class XYZINE {
 
 }
 
-if (module.exports) module.exports = XYZINE;
+module.exports = XYZINE;
